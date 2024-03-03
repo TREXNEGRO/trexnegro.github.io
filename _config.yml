@@ -13,17 +13,17 @@ search: true
 
 # Site Author
 author:
-  name   : "Your Name"
-  bio: "Your Bio"
+  name   : "TREXNEGRO"
+  bio: "Hacker, Bug Bpunty Hunter, desarrollador.. Incluso buena persona en mis tiempos libres.."
   avatar : "https://avatars.githubusercontent.com/u/9919?s=110&v=4"
-  location: Localhost, GitHub
+  location: Ecuador, somewhere on the DarkNet
   links:
     - label: "LinkedIn"
       icon: "fab fa-fw fa-linkedin"
-      url: "https://www.linkedin.com/"
+      url: "https://www.linkedin.com/in/jeremy-erazo-0811081b2/"
     - label: "GitHub"
       icon: "fab fa-fw fa-github"
-      url: "https://github.com/"
+      url: "https://github.com/TREXNEGRO"
     - label: "YouTube"
       icon: "fab fa-fw fa-youtube"
       url: "https://www.youtube.com/"
@@ -62,7 +62,7 @@ defaults:
       comments: true
       classes: wide
       header:
-        teaser: "/assets/images/Mont-Blanc.webp"
+        teaser: "/assets/images/DALL-E_Permantent.png"
   # _pages
   - scope:
       path: "_pages"
@@ -75,8 +75,8 @@ defaults:
         overlay_image: "/assets/images/Mont-Blanc.webp"
         overlay_filter: 0.3
         actions:
-          - label: "❤️ Become a Sponsor"
-            url: "https://github.com/sponsors/"
+          - label: "❤️ Dame amor"
+            url: "https://app.hackthebox.com/users/390124"
 
 category_archive:
   type: liquid
