@@ -3,7 +3,7 @@ markdown: kramdown
 remote_theme: "mmistakes/minimal-mistakes@4.24.0"
 
 # Site Settings
-title: "Site Template"
+title: "F"
 subtitle: "Awesome Site Template"
 name: "Your Name"
 description: "Your website description!"
@@ -14,7 +14,7 @@ search: true
 # Site Author
 author:
   name   : "TREXNEGRO"
-  bio: "Hacker, Bug Bpunty Hunter, desarrollador.. Incluso buena persona en mis tiempos libres.."
+  bio: "Hacker, desarrollador, poeta.. \nIncluso buena persona en\n mis tiempos libres.."
   avatar : "https://avatars.githubusercontent.com/u/9919?s=110&v=4"
   location: Ecuador, somewhere on the DarkNet
   links:
@@ -62,7 +62,7 @@ defaults:
       comments: true
       classes: wide
       header:
-        teaser: "/assets/images/DALL-E_Permantent.png"
+        teaser: "/assets/images/AAAA.jpg"
   # _pages
   - scope:
       path: "_pages"
