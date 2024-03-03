@@ -3,10 +3,10 @@ markdown: kramdown
 remote_theme: "mmistakes/minimal-mistakes@4.24.0"
 
 # Site Settings
-title: "F"
-subtitle: "Awesome Site Template"
-name: "Your Name"
-description: "Your website description!"
+title: "CIBERMARKET AND BLOG"
+subtitle: "Unlimited"
+name: "TREXNEGRO"
+description: "What cannot be fixed with money, can be fixed with a lot of money."
 locale: "en-US"
 breadcrumbs: true
 search: true
@@ -15,7 +15,7 @@ search: true
 author:
   name   : "TREXNEGRO"
   bio: "Hacker, desarrollador, poeta.. \nIncluso buena persona en\n mis tiempos libres.."
-  avatar : "https://avatars.githubusercontent.com/u/9919?s=110&v=4"
+  avatar : "/assets/images/BBBB.jpg"
   location: Ecuador, somewhere on the DarkNet
   links:
     - label: "LinkedIn"
@@ -62,7 +62,7 @@ defaults:
       comments: true
       classes: wide
       header:
-        teaser: "/assets/images/AAAA.jpg"
+        teaser: "/assets/images/BBBB.jpg"
   # _pages
   - scope:
       path: "_pages"
@@ -72,7 +72,7 @@ defaults:
       author_profile: true
       classes: wide
       header:
-        overlay_image: "/assets/images/Mont-Blanc.webp"
+        overlay_image: "/assets/images/BBBB.jpg"
         overlay_filter: 0.3
         actions:
           - label: "❤️ Dame amor"
