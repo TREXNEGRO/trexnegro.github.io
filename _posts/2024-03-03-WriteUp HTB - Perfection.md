@@ -4,9 +4,9 @@ excerpt: "Resolucion de la maquina de Hack The Box 'Support' - Session X"
 header:
   teaser: "/assets/images/Support.png"
 categories:
-  - WriteUp
+  - WriteUp Machine 
 ---
-## Que es AD?
+## ¿Que es AD?
 
 En primer lugar, **AD (Active Directory) es una tecnología diseñada por Microsoft** e introducida en Windows 2000 Server  cuyo objetivo es el de definir un conjunto de **componentes centralizados** que se encargan de **almacenar, organizar y distribuir información a las máquinas que hacen parte de una red de ordenadores**. Para que exista un AD, es necesario contar con ordenadores que tengan una versión «Server» de Windows, los cuales se encargarán precisamente de mantener la información del entorno. Ahora bien, la información que se guarda en estos servidores se compone de unidades llamadas objetos y pueden ser prácticamente cualquier cosa: Usuarios, ordenadores, grupos, unidades organizativas, servicios, etc.
 

@@ -1,10 +1,10 @@
 ---
-title: "Path Traversal Ejemplos"
+title: "Path Traversal [Basico]" 
 excerpt: "Ejemplos de ejecucion de Path Traversal basicos"
 header:
   teaser: "/assets/images/PathTraversal.jpg"
 categories:
-  - Vulnerability
+  - Vulnerabilidades 
 ---
 
 
@@ -59,7 +59,6 @@ y listo, la intrusión esta terminada.
 ---
 
 ## Archangel - TryHackMe ( Intrusión con log poisoning ) 
-
 ### Parámetros de explotación 
  * Url: como notamos la URL interactúa con archivos de la maquina  `http://mafialive.thm/test.phpview=/var/www/html/development_testing/mrrobot.php`
 ### Métodos de explotación
