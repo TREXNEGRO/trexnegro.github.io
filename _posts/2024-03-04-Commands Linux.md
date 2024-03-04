@@ -9,7 +9,9 @@ categories:
 
 <style>
   .teaser-img {
-    width: 300px; /* Puedes ajustar el tamaño según tus necesidades */
+    width: 900px; /* Ancho de la imagen */
+    height: auto; /* Altura ajustada automáticamente */
+    max-height: 300px; /* Altura máxima deseada */
     /* Puedes agregar más estilos si es necesario */
   }
 </style>
