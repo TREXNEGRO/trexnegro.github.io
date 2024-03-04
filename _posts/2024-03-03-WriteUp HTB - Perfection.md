@@ -210,7 +210,7 @@ Local Group Memberships      *Remote Management Use
 
 Ahora que estamos dentro, podemos intentar usar Bloodhound para una mayor enumeración. Bloodhound nos hace la vida más fácil porque puede brindarnos visualización de las relaciones dentro de un entorno de Active Directory.
 
-![[Support1,png]]
+![](/assets/images/Support1.png)
 
 Este grafico puede ser un poco confuso para aquellos que no han topado AD, pero debeemos saber que:
 
