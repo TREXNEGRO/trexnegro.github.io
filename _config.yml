@@ -3,7 +3,7 @@ markdown: kramdown
 remote_theme: "mmistakes/minimal-mistakes@4.24.0"
 
 # Site Settings
-title: "CIBERMARKET AND BLOG"
+title: "Cybermarket & Blog"
 subtitle: "Unlimited"
 name: "TREXNEGRO"
 description: "What cannot be fixed with money, can be fixed with a lot of money."
@@ -14,7 +14,7 @@ search: true
 # Site Author
 author:
   name   : "TREXNEGRO"
-  bio: "Hacker, desarrollador, poeta.. \nIncluso buena persona en\n mis tiempos libres.."
+  bio: "~~Hacker~~, desarrollador, poeta.. \nIncluso buena persona en\n mis tiempos libres.."
   avatar : "/assets/images/IAM.png"
   location: Somewhere on the DarkNet
   links:
