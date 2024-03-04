@@ -1,1 +1,1 @@
-# This repository is as private as your Cuba
+# Are you a toad or did they send you?
