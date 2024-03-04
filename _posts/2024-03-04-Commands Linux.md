@@ -7,8 +7,19 @@ categories:
   - Linux
 ---
 
+<style>
+  .teaser-img {
+    width: 300px; /* Puedes ajustar el tamaño según tus necesidades */
+    /* Puedes agregar más estilos si es necesario */
+  }
+</style>
+
+<!-- Puedes usar HTML para la imagen y agregar una clase -->
+<img src="{{ page.header.teaser }}" alt="Teaser image" class="teaser-img">
+
 ## Comandos para el manejo de ficheros
 ### cat, more, head, tac
+
 ```bash
 cat archivo.txt    ## Mostrar contenido completo de un archivo.
 more archivo.txt   ## Mostrar contenido de un archivo de forma paginada.
@@ -583,8 +594,7 @@ chmod u+x fichero    ## Añade(+) permiso al usuario(u) de ejecución(x)
 chmod g-w fichero    ## Quita(-) permiso al grupo(g) de escritura(w)
 ```
 ## Editar un Fichero
-* WARNING!!!! (hacer solo en local y con el usuario) `{: .notice--warning}` class.
-{: .notice--warning}
+WARNING!!!! (hacer solo en local y con el usuario) `{: .notice--warning}` class.
 ```bash
 joe nombre_fichero    ## Abre el editor
 Ctrl + _    ## Deshacer
