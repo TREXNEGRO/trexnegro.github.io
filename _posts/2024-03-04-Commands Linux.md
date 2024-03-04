@@ -1,634 +1,636 @@
 ---
-title: "Commados de Linux para Pentesters"
+title: "Commados de Linux para Pentesters (Basicos)"
 excerpt: "Una lista de Commandos de Linux para personas que empiezan en el mundo del Hacking."
 header:
-  teaser: "/assets/images/iss-crossing-the-moon.webp"
+  teaser: "/assets/images/basicLinux.png"
 categories:
-  - WriteUp
+  - Linux
 ---
 
-# Comandos para el manejo de ficheros
-## cat, more, head, tac
+## Comandos para el manejo de ficheros
+### cat, more, head, tac
 ```bash
-cat archivo.txt    # Mostrar contenido completo de un archivo.
-more archivo.txt   # Mostrar contenido de un archivo de forma paginada.
-head archivo.txt   # Mostrar las primeras líneas de un archivo.
-tac archivo.txt    # Mostrar contenido en orden inverso.
+cat archivo.txt    ## Mostrar contenido completo de un archivo.
+more archivo.txt   ## Mostrar contenido de un archivo de forma paginada.
+head archivo.txt   ## Mostrar las primeras líneas de un archivo.
+tac archivo.txt    ## Mostrar contenido en orden inverso.
 ```
 
-## cd
+### cd
 ```bash
-cd directorio    # Cambiar al directorio especificado.
+cd directorio    ## Cambiar al directorio especificado.
 ```
-## compress
+### compress
 ```bash
-compress archivo    # Comprimir archivo en formato .Z.
+compress archivo    ## Comprimir archivo en formato .Z.
 ```
-## cp
+### cp
 ```bash
-cp archivo.txt /directorio/destino    # Copiar un archivo a otro directorio.
-cp -R /directorio/origen /directorio/destino    # Copiar directorio completo.
+cp archivo.txt /directorio/destino    ## Copiar un archivo a otro directorio.
+cp -R /directorio/origen /directorio/destino    ## Copiar directorio completo.
 ```
-## chmod
+### chmod
 ```bash
-chmod [ugo]+[rwx] nombre_archivo    # Cambiar permisos de un archivo.
+chmod [ugo]+[rwx] nombre_archivo    ## Cambiar permisos de un archivo.
 ```
-## chown
+### chown
 ```bash
-chown usuario.grupo nombre_archivo    # Cambiar propietario y grupo de un archivo.
+chown usuario.grupo nombre_archivo    ## Cambiar propietario y grupo de un archivo.
 ```
-## df
+### df
 ```bash
-df -h    # Mostrar espacio libre en disco (formato legible por humanos).
+df -h    ## Mostrar espacio libre en disco (formato legible por humanos).
 ```
-## du
+### du
 ```bash
-du -sh    # Mostrar espacio en disco utilizado.
+du -sh    ## Mostrar espacio en disco utilizado.
 ```
-## du -sh * | sort -h
+### du -sh * | sort -h
 ```bash
-du -sh * | sort -h    # Mostrar y ordenar por tamaño los directorios.
+du -sh * | sort -h    ## Mostrar y ordenar por tamaño los directorios.
 ```
-## ncdu
+### ncdu
 ```bash
-ncdu /directorio    # Diagnosticar el uso de disco (NCurses Disk Usage).
+ncdu /directorio    ## Diagnosticar el uso de disco (NCurses Disk Usage).
 ```
-## fdformat
+### fdformat
 ```bash
-fdformat dispositivo    # Formatear un diskette.
+fdformat dispositivo    ## Formatear un diskette.
 ```
-## fdisk
+### fdisk
 ```bash
-fdisk dispositivo    # Particionar unidades.
+fdisk dispositivo    ## Particionar unidades.
 ```
-## file
+### file
 ```bash
-file archivo    # Determinar el tipo de archivo.
+file archivo    ## Determinar el tipo de archivo.
 ```
-## find
+### find
 ```bash
-find directorio -name nombre_archivo    # Buscar archivo en un directorio (recursivamente).
+find directorio -name nombre_archivo    ## Buscar archivo en un directorio (recursivamente).
 ```
-## fsck
+### fsck
 ```bash
-fsck dispositivo    # Chequear el sistema de archivos.
+fsck dispositivo    ## Chequear el sistema de archivos.
 ```
-## grep
+### grep
 ```bash
-grep "texto" archivo.txt    # Buscar texto en un archivo.
+grep "texto" archivo.txt    ## Buscar texto en un archivo.
 ```
-## gzip
+### gzip
 ```bash
-gzip archivo    # Comprimir archivo en formato GZip.
+gzip archivo    ## Comprimir archivo en formato GZip.
 ```
-## ln
+### ln
 ```bash
-ln -sf origen destino    # Crear enlace simbólico.
+ln -sf origen destino    ## Crear enlace simbólico.
 ```
-## ls
+### ls
 ```bash
-ls /directorio    # Listar contenido de un directorio.
-ls -l --full-time    # Mostrar formato de fecha completo.
-ls -X    # Ordenar por extensión.
-ls -t    # Ordenar por fecha.
-ls -S    # Ordenar por tamaño.
+ls /directorio    ## Listar contenido de un directorio.
+ls -l --full-time    ## Mostrar formato de fecha completo.
+ls -X    ## Ordenar por extensión.
+ls -t    ## Ordenar por fecha.
+ls -S    ## Ordenar por tamaño.
 ```
-## mkdir
+### mkdir
 ```bash
-mkdir directorio    # Crear un directorio.
+mkdir directorio    ## Crear un directorio.
 ```
-## mkfs
+### mkfs
 ```bash
-mkfs dispositivo    # Crear nuevo sistema de archivos.
+mkfs dispositivo    ## Crear nuevo sistema de archivos.
 ```
-## mkswap
+### mkswap
 ```bash
-mkswap dispositivo    # Crear espacio de intercambio.
+mkswap dispositivo    ## Crear espacio de intercambio.
 ```
-## tar
+### tar
 ```bash
-tar -xvzf archivo.tar.gz    # Descomprimir archivo *.tar.gz.
-tar -xvvf archivo.tar    # Descomprimir archivo *.tar.
-tar -cvvf archivo.tar directorio    # Comprimir directorio en archivo *.tar.
+tar -xvzf archivo.tar.gz    ## Descomprimir archivo *.tar.gz.
+tar -xvvf archivo.tar    ## Descomprimir archivo *.tar.
+tar -cvvf archivo.tar directorio    ## Comprimir directorio en archivo *.tar.
 ```
-## touch
+### touch
 ```bash
-touch archivo    # Modificar fecha de un archivo.
+touch archivo    ## Modificar fecha de un archivo.
 ```
-## type
+### type
 ```bash
-type nombre_archivo    # Mostrar la ubicación de un archivo en el "path".
+type nombre_archivo    ## Mostrar la ubicación de un archivo en el "path".
 ```
-## umount
+### umount
 ```bash
-umount dispositivo    # Desmontar una unidad montada.
+umount dispositivo    ## Desmontar una unidad montada.
 ```
-## byobu
+### byobu
 ```bash
-byobu    # Compartir consola de forma remota.
+byobu    ## Compartir consola de forma remota.
 ```
-## dd
+### dd
 ```bash
-dd if=/dev/zero of=test.img bs=1MB count=4096    # Crear un archivo de ceros (4GB).
+dd if=/dev/zero of=test.img bs=1MB count=4096    ## Crear un archivo de ceros (4GB).
 ```
-## scp
+### scp
 ```bash
-scp -P PUERTO archivo usuario@servidor:ruta    # Copiar archivos por red con SSH.
+scp -P PUERTO archivo usuario@servidor:ruta    ## Copiar archivos por red con SSH.
 ```
-# Cambiar permisos recursivamente solo a directorios
+## Cambiar permisos recursivamente solo a directorios
 ```bash
 find . -type d -exec chmod 0755 {} \;
 ```
-# Cambiar permisos recursivamente solo a archivos
+## Cambiar permisos recursivamente solo a archivos
 ```bash
 find . -type f -exec chmod 0644 {} \;
 ```
-# Comprimir y descomprimir
+## Comprimir y descomprimir
 ```bash
-tar -xvzf archivo.tar.gz    # Descomprimir archivo *.tar.gz.
-tar -xvvf archivo.tar    # Descomprimir archivo *.tar.
-tar -cvvf archivo.tar directorio    # Comprimir directorio en archivo *.tar.
-gzip -d archivo.gz    # Descomprimir archivo *.gz.
-gzip archivo    # Comprimir ficheros empaquetados.
+tar -xvzf archivo.tar.gz    ## Descomprimir archivo *.tar.gz.
+tar -xvvf archivo.tar    ## Descomprimir archivo *.tar.
+tar -cvvf archivo.tar directorio    ## Comprimir directorio en archivo *.tar.
+gzip -d archivo.gz    ## Descomprimir archivo *.gz.
+gzip archivo    ## Comprimir ficheros empaquetados.
 ```
-# Comandos para el manejo de procesos
-## dmesg
+## Comandos para el manejo de procesos
+### dmesg
 ```bash
-dmesg    # Listar hardware reconocido.
+dmesg    ## Listar hardware reconocido.
 ```
-## fdisk /mbr
+### fdisk /mbr
 ```bash
-fdisk /mbr    # Eliminar Lilo.
+fdisk /mbr    ## Eliminar Lilo.
 ```
-## free
+### free
 ```bash
-free    # Mostrar memoria libre y utilizada.
+free    ## Mostrar memoria libre y utilizada.
 ```
-## halt
+### halt
 ```bash
-halt    # Apagar la máquina.
+halt    ## Apagar la máquina.
 ```
-## kill
+### kill
 ```bash
-kill PID    # Matar un proceso por su número de identificación.
+kill PID    ## Matar un proceso por su número de identificación.
 ```
-## ldd
+### ldd
 ```bash
-ldd /ruta/programa    # Mostrar librerías necesarias para ejecutar un programa.
+ldd /ruta/programa    ## Mostrar librerías necesarias para ejecutar un programa.
 ```
-## lsmod
+### lsmod
 ```bash
-lsmod    # Ver módulos cargados en el kernel.
+lsmod    ## Ver módulos cargados en el kernel.
 ```
-## modprobe
+### modprobe
 ```bash
-modprobe -a    # Instalar módulos.
-modprobe -r    # Eliminar módulos.
-modprobe -l    # Listar módulos.
+modprobe -a    ## Instalar módulos.
+modprobe -r    ## Eliminar módulos.
+modprobe -l    ## Listar módulos.
 ```
-## ps
+### ps
 ```bash
-ps fax    # Mostrar todos los procesos en ejecución.
+ps fax    ## Mostrar todos los procesos en ejecución.
 ```
-## pstree
+### pstree
 ```bash
-pstree    # Mostrar procesos en forma de árbol.
+pstree    ## Mostrar procesos en forma de árbol.
 ```
-## reboot
+### reboot
 ```bash
-reboot    # Reiniciar el sistema.
+reboot    ## Reiniciar el sistema.
 ```
-## shutdown
+### shutdown
 ```bash
-shutdown    # Cerrar el sistema.
+shutdown    ## Cerrar el sistema.
 ```
-## top
+### top
 ```bash
-top    # Monitorear procesos y estado del sistema.
+top    ## Monitorear procesos y estado del sistema.
 ```
-## uname
+### uname
 ```bash
-uname -a    # Mostrar información del sistema.
+uname -a    ## Mostrar información del sistema.
 ```
-## /sbin/ldconfig -p
+### /sbin/ldconfig -p
 ```bash
-/sbin/ldconfig -p    # Librerías instaladas.
+/sbin/ldconfig -p    ## Librerías instaladas.
 ```
-## source /root/.bashrc
+### source /root/.bashrc
 ```bash
-source /root/.bashrc    # Ejecutar de nuevo el .bashrc modificado.
+source /root/.bashrc    ## Ejecutar de nuevo el .bashrc modificado.
 ```
-# Comandos para el manejo de usuarios
-## adduser
+## Comandos para el manejo de usuarios
+### adduser
 ```bash
-adduser nombre_usuario    # Crear una cuenta de usuario.
+adduser nombre_usuario    ## Crear una cuenta de usuario.
 ```
-## chsh
+### chsh
 ```bash
-chsh nombre_usuario    # Cambiar la shell de un usuario.
+chsh nombre_usuario    ## Cambiar la shell de un usuario.
 ```
-## groups
+### groups
 ```bash
-groups    # Mostrar el listado de grupos de usuarios del sistema.
+groups    ## Mostrar el listado de grupos de usuarios del sistema.
 ```
-## id
+### id
 ```bash
-id nombre_usuario    # Mostrar la información de usuario y grupo de un usuario.
+id nombre_usuario    ## Mostrar la información de usuario y grupo de un usuario.
 ```
-## logout
+### logout
 ```bash
-logout    # Salir del sistema y permitir el ingreso a otro usuario (Ctrl + D).
+logout    ## Salir del sistema y permitir el ingreso a otro usuario (Ctrl + D).
 ```
-## passwd
+### passwd
 ```bash
-passwd nombre_usuario    # Cambiar el password de un usuario.
+passwd nombre_usuario    ## Cambiar el password de un usuario.
 ```
-## su
+### su
 ```bash
-su nombre_usuario    # Dar privilegios de root a un usuario.
+su nombre_usuario    ## Dar privilegios de root a un usuario.
 ```
-## talk
+### talk
 ```bash
-talk nombre_usuario    # Permitir chatear con otros usuarios.
+talk nombre_usuario    ## Permitir chatear con otros usuarios.
 ```
-## users
+### users
 ```bash
-users    # Lista los usuarios conectados al sistema.
+users    ## Lista los usuarios conectados al sistema.
 ```
-## who
+### who
 ```bash
-who    # Muestra información de los usuarios conectados al sistema.
-who -b    # Saber el último reboot.
-who -r    # Saber el RunLevel actual.
+who    ## Muestra información de los usuarios conectados al sistema.
+who -b    ## Saber el último reboot.
+who -r    ## Saber el RunLevel actual.
 ```
-## whoami
+### whoami
 ```bash
-whoami    # Muestra información propia.
+whoami    ## Muestra información propia.
 ```
-# Comandos de red
-## finger
+## Comandos de red
+### finger
 ```bash
-finger nombre_usuario    # Información sobre un usuario.
+finger nombre_usuario    ## Información sobre un usuario.
 ```
-## host
+### host
 ```bash
-host "destino"    # Muestra la IP de "destino".
+host "destino"    ## Muestra la IP de "destino".
 ```
-## ifconfig
+### ifconfig
 ```bash
-ifconfig    # Ver las placas de red.
+ifconfig    ## Ver las placas de red.
 ```
-## mail
+### mail
 ```bash
-mail    # Sencillo programa de correo.
+mail    ## Sencillo programa de correo.
 ```
-## netstat
+### netstat
 ```bash
-netstat    # Testeo de red.
+netstat    ## Testeo de red.
 ```
-## nmap
+### nmap
 ```bash
-nmap "ip de destino"    # Analizar IPs o rangos.
+nmap "ip de destino"    ## Analizar IPs o rangos.
 ```
-## nslookup
+### nslookup
 ```bash
-nslookup dominio [dns-server]    # Query Internet name servers interactively.
+nslookup dominio [dns-server]    ## Query Internet name servers interactively.
 ```
-## ping
+### ping
 ```bash
-ping "destino"    # Enviar paquetes y esperar una respuesta.
+ping "destino"    ## Enviar paquetes y esperar una respuesta.
 ```
-## talk
+### talk
 ```bash
-talk nombre_usuario    # Establecer una charla con otro usuario.
+talk nombre_usuario    ## Establecer una charla con otro usuario.
 ```
-## traceroute
+### traceroute
 ```bash
-traceroute dominio.extension    # Print the route packets take to network host.
+traceroute dominio.extension    ## Print the route packets take to network host.
 ```
-## wall
+### wall
 ```bash
-wall "mensaje"    # Mensaje a todos los usuarios.
+wall "mensaje"    ## Mensaje a todos los usuarios.
 ```
-## pktstat
+### pktstat
 ```bash
-pktstat -i eth0    # Muestra el estado de procesos relacionados con la interfaz de red eth0.
+pktstat -i eth0    ## Muestra el estado de procesos relacionados con la interfaz de red eth0.
 ```
-## iptraf
+### iptraf
 ```bash
-iptraf    # Información de tráfico de red.
+iptraf    ## Información de tráfico de red.
 ```
-## iftop
+### iftop
 ```bash
-iftop    # Top del tráfico de red.
+iftop    ## Top del tráfico de red.
 ```
-## dig
+### dig
 ```bash
-dig DOMINIO    # Información de DNS del dominio.
+dig DOMINIO    ## Información de DNS del dominio.
 ```
-## dig DOMINIO INPUT
+### dig DOMINIO INPUT
 ```bash
-dig DOMINIO INPUT    # Información de DNS del dominio sobre el input deseado (INPUT = CNAME, TXT, NS, A[default]).
+dig DOMINIO INPUT    ## Información de DNS del dominio sobre el input deseado (INPUT = CNAME, TXT, NS, A[default]).
 ```
-# Otros comandos
-## banner
+## Otros comandos
+### banner
 ```bash
-banner "texto"    # Saca letrero en pantalla con el texto proporcionado.
+banner "texto"    ## Saca letrero en pantalla con el texto proporcionado.
 ```
-## cal
+### cal
 ```bash
-cal    # Muestra el calendario.
+cal    ## Muestra el calendario.
 ```
-## clear
+### clear
 ```bash
-clear    # Limpia la pantalla.
+clear    ## Limpia la pantalla.
 ```
-## date
+### date
 ```bash
-date    # Muestra el día y la hora.
+date    ## Muestra el día y la hora.
 ```
-## ddate
+### ddate
 ```bash
-ddate    # Similar a 'date' pero de forma diferente.
+ddate    ## Similar a 'date' pero de forma diferente.
 ```
-## info
+### info
 ```bash
-info    # Muestra la ayuda de un comando.
+info    ## Muestra la ayuda de un comando.
 ```
-## man
+### man
 ```bash
-man nombre_comando    # Muestra las páginas del manual de un comando.
+man nombre_comando    ## Muestra las páginas del manual de un comando.
 ```
-## mesg
+### mesg
 ```bash
-mesg    # Bloqueo de mensajes de write.
+mesg    ## Bloqueo de mensajes de write.
 ```
-## startx
+### startx
 ```bash
-startx    # Para iniciar XWindow.
+startx    ## Para iniciar XWindow.
 ```
-## write
+### write
 ```bash
-write nombre_usuario    # Manda un mensaje a la pantalla de un usuario.
+write nombre_usuario    ## Manda un mensaje a la pantalla de un usuario.
 ```
-## byobu
+### byobu
 ```bash
-byobu    # Manejador de terminales (similar a GNU Screen o tmux).
+byobu    ## Manejador de terminales (similar a GNU Screen o tmux).
 ```
 F2 -> nueva pestaña
 F3 -> moverse por las pestañas.
 
-## screen
+### screen
 ```bash
-screen    # Gestión remota. Permite desconectar y volver a reconectar sin parar el proceso que hemos lanzado.
+screen    ## Gestión remota. Permite desconectar y volver a reconectar sin parar el proceso que hemos lanzado.
 ```
-# Comandos Debian
-## apt-get
+## Comandos Debian
+### apt-get
 ```bash
-apt-get update    # Actualiza la base de datos de los paquetes .deb.
-apt-get upgrade    # Actualiza los paquetes a su última versión.
-apt-get install "paquete"    # Instala el paquete especificado.
-apt-get remove "paquete"    # Desinstala el paquete especificado.
-apt-get check    # Actualiza la caché de paquetes.
-apt-get clean    # Borra los paquetes .deb descargados.
-apt-get dist-upgrade    # Hace un upgrade del sistema operativo.
-apt-get source "paquete"    # Descarga fuentes del paquete especificado.
-apt-cache showpkg "paquete"    # Muestra todas las versiones disponibles del paquete.
-modconf    # Pequeño programa para sacar o poner módulos del kernel.
-update-rc.d "opcion" "programa o script" "opcion"    # Remueve o agrega el script o programa a los niveles de corrida especificados.
+apt-get update    ## Actualiza la base de datos de los paquetes .deb.
+apt-get upgrade    ## Actualiza los paquetes a su última versión.
+apt-get install "paquete"    ## Instala el paquete especificado.
+apt-get remove "paquete"    ## Desinstala el paquete especificado.
+apt-get check    ## Actualiza la caché de paquetes.
+apt-get clean    ## Borra los paquetes .deb descargados.
+apt-get dist-upgrade    ## Hace un upgrade del sistema operativo.
+apt-get source "paquete"    ## Descarga fuentes del paquete especificado.
+apt-cache showpkg "paquete"    ## Muestra todas las versiones disponibles del paquete.
+modconf    ## Pequeño programa para sacar o poner módulos del kernel.
+update-rc.d "opcion" "programa o script" "opcion"    ## Remueve o agrega el script o programa a los niveles de corrida especificados.
 ```
-# Comandos Red Hat
-## rpm
+## Comandos Red Hat
+### rpm
 ```bash
-rpm -q "programa"    # Para saber si "programa" está instalado.
-rpm -qs "programa"    # Estado de todos los archivos de "programa".
-rpm -qd "programa"    # Documentación de "programa" instalada.
-rpm -qc "programa"    # Archivos de configuración de "programa".
-rpm -qa "programa"    # Muestra todos los rpm de "programa".
-rpm -qa | grep "programa"    # Busca el nombre de paquete del "programa".
-rpm -i "programa"    # Instala "programa".
-rpm -u "programa"    # Actualiza "programa".
-rpm -e "programa"    # Elimina "programa".
-rpm -ivh "programa"    # Instala "programa" en pasos y muestra el progreso de la instalación.
+rpm -q "programa"    ## Para saber si "programa" está instalado.
+rpm -qs "programa"    ## Estado de todos los archivos de "programa".
+rpm -qd "programa"    ## Documentación de "programa" instalada.
+rpm -qc "programa"    ## Archivos de configuración de "programa".
+rpm -qa "programa"    ## Muestra todos los rpm de "programa".
+rpm -qa | grep "programa"    ## Busca el nombre de paquete del "programa".
+rpm -i "programa"    ## Instala "programa".
+rpm -u "programa"    ## Actualiza "programa".
+rpm -e "programa"    ## Elimina "programa".
+rpm -ivh "programa"    ## Instala "programa" en pasos y muestra el progreso de la instalación.
 ```
-# Comandos para el manejo de paquetes, servicios e instalaciones
-## tar
+## Comandos para el manejo de paquetes, servicios e instalaciones
+### tar
 ```bash
-tar - "opcion" "paquete"    # Comprime o descomprime el "paquete" de formato tar.gz, .tgz o tar.bz2.
+tar - "opcion" "paquete"    ## Comprime o descomprime el "paquete" de formato tar.gz, .tgz o tar.bz2.
 ```
-## rpm
+### rpm
 ```bash
-rpm - "opcion" "paquete"    # Instala o desinstala el "paquete" dependiendo de la opción.
+rpm - "opcion" "paquete"    ## Instala o desinstala el "paquete" dependiendo de la opción.
 ```
-## dpkg
+### dpkg
 ```bash
-dpkg - "opcion" "paquete"    # Instala o desinstala el "paquete" dependiendo de la opción (solo Debian).
-dpkg -i    # Instalar paquete.
-dpkg --info    # Información del paquete.
-dpkg -c    # Muestra la lista de ficheros contenidos.
-dpkg --contents    # Lista todos los ficheros contenidos con sus directorios.
-dpkg -f    # Muestra información de versión del paquete.
-dpkg --unpack    # Desempaqueta.
-dpkg --purge    # Borra un paquete incluidos los ficheros de configuración.
-dpkg -r    # Borra un paquete pero no borra los ficheros de configuración.
-dpkg -L    # Lista el paquete si está instalado.
-dpkg -l    # Lista los paquetes instalados.
-update-rc.d "opcion" "programa o script" "opcion"    # Remueve o agrega el script o programa a los niveles de corrida que se le asignen.
+dpkg - "opcion" "paquete"    ## Instala o desinstala el "paquete" dependiendo de la opción (solo Debian).
+dpkg -i    ## Instalar paquete.
+dpkg --info    ## Información del paquete.
+dpkg -c    ## Muestra la lista de ficheros contenidos.
+dpkg --contents    ## Lista todos los ficheros contenidos con sus directorios.
+dpkg -f    ## Muestra información de versión del paquete.
+dpkg --unpack    ## Desempaqueta.
+dpkg --purge    ## Borra un paquete incluidos los ficheros de configuración.
+dpkg -r    ## Borra un paquete pero no borra los ficheros de configuración.
+dpkg -L    ## Lista el paquete si está instalado.
+dpkg -l    ## Lista los paquetes instalados.
+update-rc.d "opcion" "programa o script" "opcion"    ## Remueve o agrega el script o programa a los niveles de corrida que se le asignen.
 ```
-# Entorno gráfico xwindow
-## startx
+## Entorno gráfico xwindow
+### startx
 ```bash
-startx    # Iniciar X.
+startx    ## Iniciar X.
 ```
-## startx -- :2 , :3 , :4 , etc.
+### startx -- :2 , :3 , :4 , etc.
 ```bash
-startx -- :2 , :3 , :4 , etc.    # Abrir nuevas sesiones.
+startx -- :2 , :3 , :4 , etc.    ## Abrir nuevas sesiones.
 ```
-## /etc/X11/XF86Config
+### /etc/X11/XF86Config
 ```bash
-/etc/X11/XF86Config    # Configuración de XF86.
+/etc/X11/XF86Config    ## Configuración de XF86.
 ```
-## /etc/X11/Xserver
+### /etc/X11/Xserver
 ```bash
-/etc/X11/Xserver    # Configuración de servidor X.
+/etc/X11/Xserver    ## Configuración de servidor X.
 ```
-## XF86Setup
+### XF86Setup
 ```bash
-XF86Setup    # Configurar X (entorno gráfico).
+XF86Setup    ## Configurar X (entorno gráfico).
 ```
-## ctrl-alt-backspace
+### ctrl-alt-backspace
 ```bash
-ctrl-alt-backspace    # Salir de las X.
+ctrl-alt-backspace    ## Salir de las X.
 ```
-## /etc/X11/window-managers
+### /etc/X11/window-managers
 ```bash
-/etc/X11/window-managers    # Fichero donde está el programa que arranca las X.
+/etc/X11/window-managers    ## Fichero donde está el programa que arranca las X.
 ```
-# Manejo de las Unidades de Diskettes y CD-ROM
+## Manejo de las Unidades de Diskettes y CD-ROM
 
-## Montar Diskette
+### Montar Diskette
 ```bash
-mount -t msdos /dev/floppy /mnt    # /dev/floppy = /dev/fd0
+mount -t msdos /dev/floppy /mnt    ## /dev/floppy = /dev/fd0
 ```
-## Montar CD-ROM
+### Montar CD-ROM
 ```bash
-mount -t iso9660 /dev/cdrom /mnt    # /dev/cdrom = /dev/hdb
+mount -t iso9660 /dev/cdrom /mnt    ## /dev/cdrom = /dev/hdb
 ```
-## Listar Unidad Montada
+### Listar Unidad Montada
 ```bash
 ls /mnt
 ```
-## Desmontar Todo
+### Desmontar Todo
 ```bash
 umount /mnt
 ```
-## Formatear Floppy
+### Formatear Floppy
 ```bash
-superformat /dev/fd0 hd (msdos)    # (Es necesario tener instalado fdutils)
-superformat /dev/fd0 sect=21 cyl=83    # mkfs.ext2 /dev/fd0 (crea sistema de archivos ext2)
+superformat /dev/fd0 hd (msdos)    ## (Es necesario tener instalado fdutils)
+superformat /dev/fd0 sect=21 cyl=83    ## mkfs.ext2 /dev/fd0 (crea sistema de archivos ext2)
 ```
-# Convertir Paquetes de RedHat a Debian
+## Convertir Paquetes de RedHat a Debian
 ```bash
-alien -d fichero.rpm    # Convierte fichero rpm a deb.
-alien -d fichero.tgz    # Convierte fichero tgz a deb.
-alien -i fichero.rpm    # Convierte fichero rpm a deb y lo instala.
-alien -i fichero.tgz    # Convierte fichero tgz a deb y lo instala.
+alien -d fichero.rpm    ## Convierte fichero rpm a deb.
+alien -d fichero.tgz    ## Convierte fichero tgz a deb.
+alien -i fichero.rpm    ## Convierte fichero rpm a deb y lo instala.
+alien -i fichero.tgz    ## Convierte fichero tgz a deb y lo instala.
 ```
-# Manejo de la Impresora
+## Manejo de la Impresora
 ```bash
-/dev/lp1    # Dispositivo.
-ls > /dev/lp1    # Probarlo.
+/dev/lp1    ## Dispositivo.
+ls > /dev/lp1    ## Probarlo.
 ```
-# Imprimir
+## Imprimir
 ```bash
-lpr    # Ver colas de impresión.
-lpc status    # Estado de impresoras.
-lprm    # Eliminar colas en impresión.
+lpr    ## Ver colas de impresión.
+lpc status    ## Estado de impresoras.
+lprm    ## Eliminar colas en impresión.
 ```
-# Comandos de IRC para IrcII
+## Comandos de IRC para IrcII
 ```bash
-/server    # Conectar con un servidor.
-(/server irc.arrakis.es)    # Conectar con un canal.
-(/channel #linux)    # Datos de servidor o nickname.
-/list    # Listar canales IRC.
-/names    # Nicknames de todos los usuarios.
-/msg <nick> <msg>    # Mensaje privado a nick.
-/who <canal>    # Quién está conectado y sus datos.
-/whois <nick>    # Verdadera identificación de alguien.
-/quit    # Desconectar.
+/server    ## Conectar con un servidor.
+(/server irc.arrakis.es)    ## Conectar con un canal.
+(/channel #linux)    ## Datos de servidor o nickname.
+/list    ## Listar canales IRC.
+/names    ## Nicknames de todos los usuarios.
+/msg <nick> <msg>    ## Mensaje privado a nick.
+/who <canal>    ## Quién está conectado y sus datos.
+/whois <nick>    ## Verdadera identificación de alguien.
+/quit    ## Desconectar.
 ```
-# MYSQL
+## MYSQL
 
-## Exportación
+### Exportación
 ```sql
-mysqldump -u user -p db_name > file_name.sql    # (Preguntará por la 'clave')
+mysqldump -u user -p db_name > file_name.sql    ## (Preguntará por la 'clave')
 ```
-## Importación
+### Importación
 ```sql
-mysql -u USER -p DB_NAME -h HOST < SQL_FILE_NAME    # (Preguntará por la 'clave')
+mysql -u USER -p DB_NAME -h HOST < SQL_FILE_NAME    ## (Preguntará por la 'clave')
 ```
-# Top
+## Top
 ```bash
-mytop -u USUARIO -p CLAVE -d BBDD -sNUM    # (NUM = número de segundos para el refresco)
+mytop -u USUARIO -p CLAVE -d BBDD -sNUM    ## (NUM = número de segundos para el refresco)
 ```
-# Moverse a un Directorio
+## Moverse a un Directorio
 ```bash
 cd /path/subpath ...
 ```
-# Listar un Directorio
+## Listar un Directorio
 ```bash
 ll
 ls -al
 ls -lha
 ```
-# Borrar Ficheros o Directorios
+## Borrar Ficheros o Directorios
 ```bash
 rm nombre_fichero
 rm -R nombre_directorio
 ```
-# Copiar/Duplicar Fichero con Nuevo Nombre
+## Copiar/Duplicar Fichero con Nuevo Nombre
 ```bash
 cp nombre_fichero nombre fichero_nuevo
 ```
-# Mover/Renombrar
+## Mover/Renombrar
 ```bash
-mv nombre1 nombre2    # Cambia el nombre del directorio si "nombre2" no existe, si no, mueve nombre1 dentro de nombre2.
+mv nombre1 nombre2    ## Cambia el nombre del directorio si "nombre2" no existe, si no, mueve nombre1 dentro de nombre2.
 ```
-# Modificar Propietario de un Fichero o un Directorio
+## Modificar Propietario de un Fichero o un Directorio
 ```bash
 chown usuario.grupo fichero
 ```
-# Modificar Permisos de un Fichero o un Directorio
+## Modificar Permisos de un Fichero o un Directorio
 Los permisos se agrupan de tres en tres:
-
+```
 usuario grupo otros
 rwx        rwx     rwx
 
 1 ó r - lectura
 2 ó w - escritura
 4 ó x - ejecución
-
+```
 Se pueden cambiar de dos formas:
 
 a)
 ```bash
-chmod 771 fichero    # Todos los permisos para usuario y grupo y lectura para otros.
+chmod 771 fichero    ## Todos los permisos para usuario y grupo y lectura para otros.
 1 - r - lectura
 2 - w - escritura
 4 - x - ejecucion
 ```
 b)
 ```bash
-chmod u+x fichero    # Añade(+) permiso al usuario(u) de ejecución(x)
-chmod g-w fichero    # Quita(-) permiso al grupo(g) de escritura(w)
+chmod u+x fichero    ## Añade(+) permiso al usuario(u) de ejecución(x)
+chmod g-w fichero    ## Quita(-) permiso al grupo(g) de escritura(w)
 ```
-# Editar un Fichero
-* WARNING!!!! (hacer solo en local y con el usuario)
-joe nombre_fichero    # Abre el editor
-Ctrl + _    # Deshacer
-Ctrl + K y después X    # Guarda y cierra
-Ctrl + K y después H    # Despliega la ayuda y en él puedes ver distintas acciones "^" significa "ctrl"
-
-# Verificar Memoria RAM, Tipo, Bancos, Tamaño...
-dmidecode --type 17    # Muestra información sobre las tarjetas de memoria y dónde están pinchadas.
+## Editar un Fichero
+* WARNING!!!! (hacer solo en local y con el usuario) `{: .notice--warning}` class.
+{: .notice--warning}
 ```bash
-lsb_release -a    # Permite saber la distribución y versión de SO instalado.
-cat /etc/redhat-release    # Muestra información sobre el sistema.
-lshw    # Requiere ser instalado en Debian (# apt-get install lshw). Muestra información detallada del sistema.
-grep MemTotal /proc/meminfo    # Muestra la memoria RAM total del sistema.
-grep SwapTotal /proc/meminfo    # Muestra la cantidad de espacio swap del sistema (memoria de intercambio).
+joe nombre_fichero    ## Abre el editor
+Ctrl + _    ## Deshacer
+Ctrl + K y después X    ## Guarda y cierra
+Ctrl + K y después H    ## Despliega la ayuda y en él puedes ver distintas acciones "^" significa "ctrl"
 ```
-# Herramientas para Administración del Sistema
+## Verificar Memoria RAM, Tipo, Bancos, Tamaño...
+dmidecode --type 17    ## Muestra información sobre las tarjetas de memoria y dónde están pinchadas.
 ```bash
-lsb_release -a    # Permite saber la distribución y versión de SO instalado.
-cat /etc/redhat-release    # Muestra información sobre el sistema.
-ls /etc/init.d/    # Lista los servicios disponibles.
+lsb_release -a    ## Permite saber la distribución y versión de SO instalado.
+cat /etc/redhat-release    ## Muestra información sobre el sistema.
+lshw    ## Requiere ser instalado en Debian (## apt-get install lshw). Muestra información detallada del sistema.
+grep MemTotal /proc/meminfo    ## Muestra la memoria RAM total del sistema.
+grep SwapTotal /proc/meminfo    ## Muestra la cantidad de espacio swap del sistema (memoria de intercambio).
 ```
-# Reiniciar Servidores Web
+## Herramientas para Administración del Sistema
 ```bash
-/etc/init.d/apache2 restart    # Reinicia Apache.
-service apache2 restart    # Reinicia Apache (alternativa).
-/etc/init.d/mysql restart    # Reinicia MySQL.
-service mysql restart    # Reinicia MySQL (alternativa).
-/etc/init.d/nginx restart    # Reinicia Nginx.
-service nginx restart    # Reinicia Nginx (alternativa).
-/etc/init.d/php-fpm restart    # Reinicia PHP-FPM.
+lsb_release -a    ## Permite saber la distribución y versión de SO instalado.
+cat /etc/redhat-release    ## Muestra información sobre el sistema.
+ls /etc/init.d/    ## Lista los servicios disponibles.
 ```
-# Control de Memoria en Uso
+## Reiniciar Servidores Web
 ```bash
-swapon -s    # Verifica el espacio de intercambio (swap).
-free -m    # Muestra información sobre el uso de la memoria.
-php -r "echo ini_get('memory_limit').PHP_EOL;"    # Verifica el límite de memoria en PHP.
-htop    # Herramienta interactiva para el monitoreo del sistema.
+/etc/init.d/apache2 restart    ## Reinicia Apache.
+service apache2 restart    ## Reinicia Apache (alternativa).
+/etc/init.d/mysql restart    ## Reinicia MySQL.
+service mysql restart    ## Reinicia MySQL (alternativa).
+/etc/init.d/nginx restart    ## Reinicia Nginx.
+service nginx restart    ## Reinicia Nginx (alternativa).
+/etc/init.d/php-fpm restart    ## Reinicia PHP-FPM.
 ```
-# Control de Versiones de Servicios Web en Servidores
+## Control de Memoria en Uso
 ```bash
-lsb_release -a    # Muestra información sobre la distribución y versión del SO.
-cat /etc/redhat-release    # Muestra información sobre el sistema.
-apache2 -v    # Muestra la versión de Apache.
-httpd -v    # Muestra la versión de Apache (en CentOS/cPanel).
-php -v    # Muestra la versión de PHP.
-mysql -u root -p    # Inicia sesión en MySQL como root y solicita la clave.
-mysql> select version();    # Muestra la versión de MySQL.
-ps -Af | grep mysql | grep -v "grep" | wc -l    # Cuenta el número de procesos de MySQL.
+swapon -s    ## Verifica el espacio de intercambio (swap).
+free -m    ## Muestra información sobre el uso de la memoria.
+php -r "echo ini_get('memory_limit').PHP_EOL;"    ## Verifica el límite de memoria en PHP.
+htop    ## Herramienta interactiva para el monitoreo del sistema.
+```
+## Control de Versiones de Servicios Web en Servidores
+```bash
+lsb_release -a    ## Muestra información sobre la distribución y versión del SO.
+cat /etc/redhat-release    ## Muestra información sobre el sistema.
+apache2 -v    ## Muestra la versión de Apache.
+httpd -v    ## Muestra la versión de Apache (en CentOS/cPanel).
+php -v    ## Muestra la versión de PHP.
+mysql -u root -p    ## Inicia sesión en MySQL como root y solicita la clave.
+mysql> select version();    ## Muestra la versión de MySQL.
+ps -Af | grep mysql | grep -v "grep" | wc -l    ## Cuenta el número de procesos de MySQL.
 ```
