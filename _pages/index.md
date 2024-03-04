@@ -1,7 +1,7 @@
 ---
 layout: home
 permalink: /
-title: "Something Awesome!"
+title: "What chucha happen miso??"
 ---
 
 ## GitHub Page Template
