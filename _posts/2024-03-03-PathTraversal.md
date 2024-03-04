@@ -1,6 +1,6 @@
 ---
-title: "Path Traversal [Basico]" 
-excerpt: "Ejemplos de ejecucion de Path Traversal basicos"
+title: "LFI (Local File Inclusión) [Basico]" 
+excerpt: "Ejemplos de ejecucion de un Local File Inclusión"
 header:
   teaser: "/assets/images/PathTraversal.jpg"
 categories:
