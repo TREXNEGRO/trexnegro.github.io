@@ -1,8 +1,8 @@
 ---
-title: "Post example"
-excerpt: "Discover more about this site template."
+title: "Path Traversal Ejemplos"
+excerpt: "Ejemplos de ejecucion de Path Traversal basicos"
 header:
-  teaser: "/assets/images/iss-crossing-the-moon.webp"
+  teaser: "/assets/images/PathTraversal.jpg"
 categories:
   - Vulnerability
 ---
