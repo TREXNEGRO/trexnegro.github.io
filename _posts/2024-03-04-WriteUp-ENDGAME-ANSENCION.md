@@ -6,8 +6,8 @@ header:
 categories:
   - WriteUp
 ---
-De comienzo tenemos la siguiente información:
 
+De comienzo tenemos la siguiente información:
 ```
 Ascensión
 Por egre55 y TRX
@@ -340,5 +340,3 @@ PS C:\Windows\System32> type C:\Users\svc_dev\Desktop\flag.txt
 ASCENSION{********************}
 PS C:\Windows\System32>
 ```
-
-# PROXIMAMENTE..
