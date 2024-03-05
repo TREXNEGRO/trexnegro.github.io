@@ -6,19 +6,6 @@ header:
 categories:
   - WriteUp
 ---
-
-<style>
-  .teaser-img {
-    width: auto; /* Ancho ajustado automáticamente */
-    height: 300px; /* Altura de la imagen */
-    max-width: 900%; /* Ancho máximo deseado */
-    /* Puedes agregar más estilos si es necesario */
-  }
-</style>
-
-<!-- Puedes usar HTML para la imagen y agregar una clase -->
-<img src="{{ page.header.teaser }}" alt="Teaser image" class="teaser-img">
-
 De comienzo tenemos la siguiente información:
 
 ```
@@ -38,7 +25,7 @@ Punto de entrada: 10.13.38.20
 
 Además sabemos que consta de las siguientes maquinas a tener en cuenta:
 
-![alt text](image-1.png)
+![](/assets/images/image-1.png)
 
 La exploración inicial de la máquina mediante la herramienta Nmap reveló que solo un puerto se encontraba activo, específicamente el puerto 80, el cual estaba asociado con un servicio web bajo el protocolo HTTP.
 
