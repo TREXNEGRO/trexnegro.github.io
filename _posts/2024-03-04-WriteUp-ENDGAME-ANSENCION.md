@@ -7,6 +7,18 @@ categories:
   - WriteUp
 ---
 
+<style>
+  .teaser-img {
+    width: auto; /* Ancho ajustado automáticamente */
+    height: 100px; /* Altura de la imagen */
+    max-width: 600%; /* Ancho máximo deseado */
+    /* Puedes agregar más estilos si es necesario */
+  }
+</style>
+
+<!-- Puedes usar HTML para la imagen y agregar una clase -->
+<img src="{{ page.header.teaser }}" alt="Teaser image" class="teaser-img">
+
 De comienzo tenemos la siguiente información:
 ```
 Ascensión
