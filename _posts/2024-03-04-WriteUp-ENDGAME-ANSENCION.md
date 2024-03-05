@@ -10,8 +10,8 @@ categories:
 <style>
   .teaser-img {
     width: auto; /* Ancho ajustado automáticamente */
-    height: 100px; /* Altura de la imagen */
-    max-width: 600%; /* Ancho máximo deseado */
+    height: 200px; /* Altura de la imagen */
+    max-width: 700%; /* Ancho máximo deseado */
     /* Puedes agregar más estilos si es necesario */
   }
 </style>
