@@ -1,6 +1,6 @@
 ---
-title: "Commados de Linux para Pentesters (Basicos)"
-excerpt: "Una lista de Commandos de Linux para personas que empiezan en el mundo del Hacking."
+title: "Basicos para Pentesters (Basicos)"
+excerpt: "Una lista de Commandos y de informacion acerca de Linux para personas que empiezan en el mundo del Hacking."
 header:
   teaser: "/assets/images/basicLinux.png"
 categories:
@@ -395,6 +395,105 @@ F3 -> moverse por las pestañas.
 ```bash
 screen    ## Gestión remota. Permite desconectar y volver a reconectar sin parar el proceso que hemos lanzado.
 ```
+### Crear el descriptor de archivo:
+		`exec 3<> file`
+### Uso de descriptor
+		`whoami >&3`  # Manda al descriptor de archivo 
+		`exec 7>&5`  # Copia de deesciprotr de archivo
+		`exec 5&>5-` # Copiar descriptor 5 en 6 y borrar el 5
+### Eliminar descriptor de archivos
+		`exec 3>&-`
+## Capability
+con Getcap podemos listar la Capabiity del sistema:
+	```bash
+  getcap -r / 2>/dev/null
+  ```
+Nos permiten manipular nuestro identificador de usuario(UID).
+
+- https://gtfobins.github.io/#+capabilities
+
+## Busquedas
+
+Archivos
+
+	`find / -name passwd 2>/dev/null`
+	`find / -name passwd 2>/dev/null | xargs ls -l`
+
+### Por SUID
+
+	`find / -perm -4000 2>/dev/null`
+
+### Por grupo
+
+	`find / -group trexngero -type d 2>/dev/null` # Directorio
+	`find / -group trexngero -type f 2>/dev/null` # Archivos 
+
+### Por permiso
+
+	`find / -user root -writable 2>/dev/null` # W
+	`find / -user root -executable -type f 2>/dev/null` # X
+	`find / -user root -readtable 2>/dev/null` # W
+
+### Por nombres 
+
+	`find / dex\* 2>/dev/null`
+
+### Por tamaño 
+
+	`find / -user root 'size 5000Kb' 2>/dev/null` # W
+
+## LSATTR y CHATTR
+Para que no se pueda borrar por root:
+
+		`lsattr`
+		
+Asignar Flag
+	
+		`chattr +i -V file`
+		
+Quitar FLag 
+
+		`chattr -i -V file`
+
+## Permisos SGUID y SUID
+### SGUID
+
+El permiso SGID está relacionado con los grupos, tiene dos funciones:
+
+- Si se establece en un **archivo**, permite que cualquier usuario ejecute el archivo como si fuese miembro del grupo al que pertenece el archivo.
+- Si se establece en un **directorio**, a cualquier archivo creado en el directorio se le asignará como grupo perteneciente, el grupo del directorio.
+
+Para los directorios, la lógica del SGID y el motivo de su existencia es por si trabajamos en grupo, para que todos podamos acceder a los archivos de las demás personas. Si SGID no existiera, cada persona cada vez que crease un archivo, tendría que cambiarlo del grupo suyo al grupo común del proyecto. Asimismo, evitamos tener que asignarle permisos a «Otros».
+
+#### Asignar permiso
+Dos formas: 
+		
+	`chmod g+s file`
+	
+	`chmod 2755 file`
+#### Busca binarios SIUD
+	`find / -type -perm -2000 2>/dev/null`
+
+
+### SIUD
+
+El permiso SUID permite que un archivo se ejecute como si del propietario se tratase, independientemente del usuario que lo ejecute, el archivo se ejecutará como el propietario.
+Al asignar permisos SUID, la salida del comando whoami, a pasado de ser sikumy a ser root. Esto porque como podemos ver, el propietario del binario de whoami, es root.
+
+#### Asignar permiso
+Dos formas: 
+		
+	`chmod u+s file`
+	
+	`chmod 4755 file`
+#### Busca binarios SIUD
+	`find / -type f -pernm -4000 2>/dev/null`
+
+## Permisos Sticky Bit
+El bit sticky se representa mediante una t en la máscara de permisos, apareciendo en la posición del permiso de búsqueda de los otros. Se aplica a directorios de uso público, es decir, aquellos que tienen todos los permisos activados y por tanto, todo el mundo puede crear y borrar ficheros; esto puede ser un poco peligroso porque un usuario puede borrar los ficheros de otros y para evitarlo se activa el bit sticky. Con este permiso se consigue que cada usuario solo pueda borrar los ficheros que son de su propiedad. Un directorio al que se le suele activar el bit sticky es /tmp.
+
+		`chmod +t dir`  
+
 ## Comandos Debian
 ### apt-get
 ```bash
@@ -596,7 +695,8 @@ chmod u+x fichero    ## Añade(+) permiso al usuario(u) de ejecución(x)
 chmod g-w fichero    ## Quita(-) permiso al grupo(g) de escritura(w)
 ```
 ## Editar un Fichero
-WARNING!!!! (hacer solo en local y con el usuario) `{: .notice--warning}` class.
+WARNING!!!! (hacer solo en local y con el usuario)
+{: .notice--danger}
 ```bash
 joe nombre_fichero    ## Abre el editor
 Ctrl + _    ## Deshacer
