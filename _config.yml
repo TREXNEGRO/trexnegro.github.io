@@ -75,8 +75,8 @@ defaults:
         overlay_image: "/assets/images/BBBB.jpg"
         overlay_filter: 0.3
         actions:
-          - label: "❤️ Cybermarket"
-            url: "https://lifethroughmyeyes.mysellix.io/"
+          - label: "❤️ Dame amor"
+            url: "https://app.hackthebox.com/users/390124"
 
 category_archive:
   type: liquid
