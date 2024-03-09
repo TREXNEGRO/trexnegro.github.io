@@ -3,8 +3,8 @@ markdown: kramdown
 remote_theme: "mmistakes/minimal-mistakes@4.24.0"
 
 # Site Settings
-title: "Cybermarket & Blog"
-subtitle: "Unlimited"
+title: "Blog Personal"
+subtitle: "en español 🇪🇨"
 name: "TREXNEGRO"
 description: "What cannot be fixed with money, can be fixed with a lot of money."
 locale: "en-US"
@@ -16,7 +16,7 @@ author:
   name   : "TREXNEGRO"
   bio: "~~Hacker~~, desarrollador, poeta.. \nIncluso buena persona en\n mis tiempos libres.."
   avatar : "/assets/images/IAM.png"
-  location: Somewhere on the DarkNet
+  location: Ecuador 🇪🇨
   links:
     - label: "LinkedIn"
       icon: "fab fa-fw fa-linkedin"
@@ -73,7 +73,7 @@ defaults:
       classes: wide
       header:
         overlay_image: "/assets/images/BBBB.jpg"
-        overlay_filter: 0.3
+        overlay_filter: linear-gradient(rgba(0, 0, 0, 0.5), rgba(139, 0, 0, 0.5))
         actions:
           - label: "❤️ Dame amor"
             url: "https://app.hackthebox.com/users/390124"
