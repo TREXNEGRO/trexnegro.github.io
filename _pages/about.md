@@ -52,7 +52,7 @@ Soy Jeremy Sebastian Erazo Mendoza, un estudiante de Ingeniería en Telecomunica
   - Expedición: mar. 2024
   - Emitido por APIsec University
 
-![CERTIFICADO DE PENTESTING CONTRA LA NUBE DE AWS (CPNA)](https://www.linkedin.com/in/jeremy-erazo-0811081b2/details/certifications/)
+![Certificado de Pentesting contra la nube de AWS (CPNA)](https://www.linkedin.com/in/jeremy-erazo-0811081b2/details/certifications/)
 - **CERTIFICADO DE PENTESTING CONTRA LA NUBE DE AWS (CPNA)**
   - Expedición: dic. 2023
   - Emitido por Spartan-Cybersecurity
