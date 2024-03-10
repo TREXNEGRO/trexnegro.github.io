@@ -8,7 +8,7 @@ permalink: /about-your-name-here/
   <img src="/assets/images/IAM.png" alt="Jeremy Erazo - ECUADOR">
 </p>
 
-Soy Jeremy Sebastian Erazo Mendoza, un estudiante de Ingeniería en Telecomunicaciones en la Escuela Politécnica Nacional, con una pasión por la ciberseguridad y el desarrollo web. Actualmente, me destaco como Senior Penetration Tester, Pentester Cloud y Bug Bounty Hunter. Además, soy el Top #1 en HackTheBox de Ecuador.
+Soy Jeremy Sebastian Erazo Mendoza, un estudiante de Ingeniería en Telecomunicaciones de la Escuela Politécnica Nacional, con una pasión por la ciberseguridad y el desarrollo web. Actualmente, me destaco como Penetration Tester, Pentester Cloud y Bug Bounty Hunter. Además, soy el Top #1 en HackTheBox de Ecuador.
 
 ## Experiencia Laboral
 
@@ -149,9 +149,3 @@ Soy Jeremy Sebastian Erazo Mendoza, un estudiante de Ingeniería en Telecomunica
 
 ¡Gracias por visitar mi página! Si deseas ponerse en contacto conmigo, no dudes en enviar un escrbirme por mi LinkedIn.
 
-## ❤️ Become a Sponsor example
-
-If you have found my work useful, please support me!
-
-* [GitHub Sponsors](https://github.com/sponsors/){: .btn .btn--success}
-* [PayPal](https://paypal.me/){: .btn .btn--info}
