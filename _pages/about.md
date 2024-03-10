@@ -1,6 +1,6 @@
 ---
 title: "About"
-permalink: /about-your-name-here
+permalink: /about-your-name-here/
 ---
 
 # Acerca de Jeremy Erazo 👨🏻‍💻
