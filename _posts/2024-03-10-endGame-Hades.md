@@ -6,7 +6,8 @@ header:
 categories:
   - WriteUp
 ---
-# EndGame - Hades  
+<!-- Puedes usar HTML para la imagen y agregar una clase -->
+<img src="{{ page.header.teaser }}" alt="Teaser image" class="teaser-img"> 
 
 Iniciamos la máquina escaneando los puertos con nmap, encontrando solo un puerto abierto (443/tcp) correspondiente a un servicio web por HTTPS.
 
