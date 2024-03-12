@@ -2,7 +2,7 @@
 title: "EndGame - Ascension"
 excerpt: "Se realizará un WriteUp del EndGame retirado Ascension que cuenta con máquinas Windows. Desarrollaremos cada una paso a paso con el fin de entender y profundizar en nuevos conceptos."
 header:
-  teaser: "/assets/images/image.png"
+  teaser: "/assets/images/Ascension.png"
 categories:
   - WriteUp
 ---

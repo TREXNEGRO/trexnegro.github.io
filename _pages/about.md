@@ -10,6 +10,11 @@ permalink: /about-your-name-here/
 
 Soy Jeremy Sebastian Erazo Mendoza, un estudiante de Ingeniería en Telecomunicaciones de la Escuela Politécnica Nacional, con una pasión por la ciberseguridad y el desarrollo web. Actualmente, me destaco como Penetration Tester, Pentester Cloud y Bug Bounty Hunter. Además, soy el Top #1 en HackTheBox de Ecuador.
 
+<div style="text-align:center;">
+  <img src="/assets/images/IAMTPO1.jpg" alt="Top #1 HackTheBox Ecuador" style="display:block; margin:auto;">
+  <p style="margin-top:10px; font-size:18px; font-weight:bold;">Desde </p>
+</div>
+
 ## Experiencia Laboral
 
 - **Investigador IoT**
@@ -53,7 +58,7 @@ Soy Jeremy Sebastian Erazo Mendoza, un estudiante de Ingeniería en Telecomunica
   - Emitido por APIsec University
 
 ![Certificado de Pentesting contra la nube de AWS (CPNA)](https://www.linkedin.com/in/jeremy-erazo-0811081b2/details/certifications/)
-- **CERTIFICADO DE PENTESTING CONTRA LA NUBE DE AWS (CPNA)**
+- **Certificado de Pentesting contra la nube de AWS (CPNA)**
   - Expedición: dic. 2023
   - Emitido por Spartan-Cybersecurity
   - ID de la credencial: d2233394-5f74-452d-a2f6-ada465a16aa9
@@ -147,5 +152,5 @@ Soy Jeremy Sebastian Erazo Mendoza, un estudiante de Ingeniería en Telecomunica
   - ID de la credencial: NW4VF8THLLWB
 
 
-¡Gracias por visitar mi página! Si deseas ponerse en contacto conmigo, no dudes en enviar un escrbirme por mi LinkedIn.
+¡Gracias por visitar mi página! Si deseas ponerse en contacto conmigo, no dudes en enviarme un mensaje por mi LinkedIn!! 👌
 
