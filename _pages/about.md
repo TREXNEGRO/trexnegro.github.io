@@ -12,7 +12,7 @@ Soy Jeremy Sebastian Erazo Mendoza, un estudiante de Ingeniería en Telecomunica
 
 <div style="text-align:center;">
   <img src="/assets/images/IAMTPO1.jpg" alt="Top #1 HackTheBox Ecuador" style="display:block; margin:auto;">
-  <p style="margin-top:10px; font-size:18px; font-weight:bold;">Desde </p>
+  <p style="margin-top:10px; font-size:18px; font-weight:bold;">Desde 02/2024 hasta la actualidad</p>
 </div>
 
 ## Experiencia Laboral
