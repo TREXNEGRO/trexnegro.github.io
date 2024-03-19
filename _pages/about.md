@@ -1,6 +1,6 @@
 ---
 title: "About"
-permalink: /about-your-name-here/
+permalink: /trexnegro/
 ---
 # Acerca de Jeremy Erazo 👨🏻‍💻
 
