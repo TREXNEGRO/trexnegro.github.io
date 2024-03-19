@@ -72,7 +72,7 @@ defaults:
       author_profile: true
       classes: wide
       header:
-        overlay_image: "/assets/images/BBB.jpg"
+        overlay_image: "/assets/images/BANNERINIT (2).gif"
         overlay_filter: linear-gradient(rgba(0, 0, 0, 0.5), rgba(139, 0, 0, 0.5))
         actions:
           - label: "❤️ Dame amor"
