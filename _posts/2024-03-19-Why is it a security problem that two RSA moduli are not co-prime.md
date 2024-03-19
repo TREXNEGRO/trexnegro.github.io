@@ -6,15 +6,15 @@ header:
 categories:
   - Blog
 ---
-## El problema en resumen..
+## Problema de seguridad en RSA
 
-El problema de seguridad surge cuando dos módulos RSA no son primos entre sí. En RSA, la clave pública se representa como (n, e), donde $n = pq$, siendo $p$ y $q$ dos números primos, y $e$ es el exponente de cifrado.
+El problema de seguridad surge cuando dos módulos RSA no son primos entre sí. En RSA, la clave pública se representa como *(n, e)*, donde *n = pq*, siendo *p* y *q* dos números primos, y *e* es el exponente de cifrado.
 
-Supongamos que tenemos dos claves públicas distintas, $(n_A, e_A)$ y $(n_B, e_B)$, con $n_A \neq n_B$, y que $gcd(n_A, n_B) \neq 1$. Esto significa que hay un divisor común de $n_A$ y $n_B$, lo cual es un problema porque $n_A$ y $n_B$ solo tienen dos divisores cada uno: los dos números primos que los componen. Por lo tanto, $gcd(n_A, n_B)$ es uno de los primos secretos de ambas claves, y los otros primos secretos son trivialmente $n_A/gcd(n_A, n_B)$ y $n_B/gcd(n_A, n_B)$.
+Supongamos que tenemos dos claves públicas distintas, *(n<sub>A</sub>, e<sub>A</sub>)* y *(n<sub>B</sub>, e<sub>B</sub>)*, con *n<sub>A</sub> ≠ n<sub>B</sub>*, y que *gcd(n<sub>A</sub>, n<sub>B</sub>) ≠ 1*. Esto significa que hay un divisor común de *n<sub>A</sub>* y *n<sub>B</sub>*, lo cual es un problema porque *n<sub>A</sub>* y *n<sub>B</sub>* solo tienen dos divisores cada uno: los dos números primos que los componen. Por lo tanto, *gcd(n<sub>A</sub>, n<sub>B</sub>)* es uno de los primos secretos de ambas claves, y los otros primos secretos son trivialmente *n<sub>A</sub>/gcd(n<sub>A</sub>, n<sub>B</sub>)* y *n<sub>B</sub>/gcd(n<sub>A</sub>, n<sub>B</sub>)*.
 
 Esto demuestra que es crítico que en una clave RSA, ambos primos sean únicos.
 
-Saber un factor de los dos totientes puede o no revelar la clave privada. Si el factor que tienes es 4, eso no te da ninguna información: $(p-1)(q-1)$ siempre es un múltiplo de 4. Si el factor que tienes resulta ser $p-1$ o te permite encontrar $p-1$, eso obviamente es un problema. Pero dado que el totiente normalmente no se expone en ningún lugar, este no es un problema comúnmente preocupante.
+Saber un factor de los dos totientes puede o no revelar la clave privada. Si el factor que tienes es 4, eso no te da ninguna información: *(p-1)(q-1)* siempre es un múltiplo de 4. Si el factor que tienes resulta ser *p-1* o te permite encontrar *p-1*, eso obviamente es un problema. Pero dado que el totiente normalmente no se expone en ningún lugar, este no es un problema comúnmente preocupante.
 
 ## Ejemplo
 
