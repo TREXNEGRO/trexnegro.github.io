@@ -2,7 +2,7 @@
 title: "EndGame - Hades"
 excerpt: "Se realizará un WriteUp del EndGame retirado Hades que cuenta con máquinas Windows. Desarrollaremos cada una paso a paso con el fin de entender y profundizar en nuevos conceptos."
 header:
-  teaser: "/assets/images/Hades.png"
+  teaser: "/assets/images/HADES - ENDGAME (1).gif"
 categories:
   - WriteUp
 ---
