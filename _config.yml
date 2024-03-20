@@ -63,19 +63,20 @@ defaults:
       classes: wide
       header:
         teaser: "/assets/images/BBBB.jpg"
-# _pages
-- scope:
-    path: "_pages"
-    type: pages
-  values:
-    layout: single
-    author_profile: true
-    classes: wide
-    header:
-      overlay_image: "/assets/images/BANNERINIT (2).gif"
-      actions:
-        - label: "❤️ Dame amor"
-          url: "https://app.hackthebox.com/users/390124"
+  # _pages
+  - scope:
+      path: "_pages"
+      type: pages
+    values:
+      layout: single
+      author_profile: true
+      classes: wide
+      header:
+        overlay_image: "/assets/images/BANNERINIT (2).gif"
+        overlay_filter: linear-gradient(rgba(0, 0, 0, 0.5), rgba(139, 0, 0, 0.5))
+        actions:
+          - label: "❤️ Dame amor"
+            url: "https://app.hackthebox.com/users/390124"
 
 category_archive:
   type: liquid
