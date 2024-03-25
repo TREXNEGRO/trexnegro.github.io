@@ -94,3 +94,5 @@ flag2_string = flag2_bytes.decode('utf-8')
 print(flag1_string[::-1] + flag2_string[::-1])
 
 ```
+
+La Flag es "HTB{1_m1ght_h4v3_m3ss3d_uP_jU$t_4_l1ttle_b1t?}"
