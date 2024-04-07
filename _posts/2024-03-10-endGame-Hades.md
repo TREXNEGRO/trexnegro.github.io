@@ -1478,3 +1478,4 @@ PS C:\Users\remote_user.HTB\Documents> type ..\Desktop\flag.txt
 HADES{From_RBCD_To_p4s5word_v@Ult}
 ```
 
+Ultima flag
