@@ -1,7 +1,0 @@
-main:
-  - title: "Home"
-    url: /
-  - title: "Articles"
-    url: /categories/
-  - title: "About"
-    url: /trexnegro/
