@@ -1,0 +1,16 @@
+---
+---
+
+@charset "utf-8";
+
+$link-color: #00adb5;
+$footer-background-color: #000000;
+
+@import "minimal-mistakes/skins/dark"; // skin
+@import "minimal-mistakes"; // main partials
+
+a:visited,
+a:link,
+a:active {
+    text-decoration: none !important;
+}
