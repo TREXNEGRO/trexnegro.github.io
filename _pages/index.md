@@ -50,5 +50,4 @@ title: "Dashboard"
     ![Linux](https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black)
 
 <br>
-
 ![Hacker](https://raw.githubusercontent.com/sanket9006/sanket9006/master/hacker.gif)
