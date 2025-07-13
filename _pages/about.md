@@ -2,155 +2,121 @@
 title: "About"
 permalink: /trexnegro/
 ---
-# Acerca de Jeremy Erazo 👨🏻‍💻
+
+# Jeremy Erazo 👨🏻‍💻  
+**Adversary Simulation | Incident Response | Cyber Intelligence | Security Researcher**
 
 <p align="center">
-  <img src="/assets/images/IAM.png" alt="Jeremy Erazo - ECUADOR">
+  <img src="/assets/images/IAM.png" alt="Jeremy Erazo - Ecuador">
 </p>
 
-Soy Jeremy Sebastian Erazo Mendoza, un estudiante de Ingeniería en Telecomunicaciones de la Escuela Politécnica Nacional, con una pasión por la ciberseguridad y el desarrollo web. Actualmente, me destaco como Penetration Tester, Pentester Cloud y Bug Bounty Hunter. Además, soy el Top #1 en HackTheBox de Ecuador.
+Especialista en ciberseguridad ofensiva con más de 5 años de experiencia liderando operaciones avanzadas de **Red Team**, desarrollo de **exploits**, **simulaciones APT** y **respuesta a incidentes**. Experto en **evasion de EDR**, explotación en profundidad, análisis de malware e ingeniería inversa. Actualmente, ocupo el cargo de **Head de Operaciones Ofensivas en IST Americas**.
 
 <div style="text-align:center;">
   <img src="/assets/images/IAMTPO1.jpg" alt="Top #1 HackTheBox Ecuador" style="display:block; margin:auto;">
-  <p style="margin-top:10px; font-size:18px; font-weight:bold;">Desde 02/2024 hasta la actualidad</p>
+  <p style="margin-top:10px; font-size:18px; font-weight:bold;">Top #1 HackTheBox Ecuador (Ene. 2023 – Ene. 2024)</p>
 </div>
 
-## Experiencia Laboral
+---
 
-- **Investigador IoT**
-  - Empresa: NetSose
+## 🏆 Hitos Relevantes
 
-- **Desarrollador FullStack**
-  - Empresa: Gobierno Ecuatoriano
+- 🥇 **Top #1 HackTheBox Ecuador**  
+  Reconocimiento técnico por alto rendimiento en retos complejos de explotación, reversing y análisis forense.
 
-- **Bug Bounty Hunter**
-  - Empresa: HackerOne (Actualmente)
+- 🌍 **Top #82 HackTheBox Global**  
+  Posicionamiento de élite a nivel mundial demostrando habilidades avanzadas en pentesting, evasión y simulación realista.
 
-## Certificaciones
+- 🪖 **Instructor Militar de Operaciones Ofensivas**  
+  Capacitación estratégica para entornos operacionales complejos y simulación de amenazas persistentes avanzadas.
 
-### Seguridad de la Información y Ciberseguridad
+---
 
-![(ISC)² Systems Security Certified Practitioner (SSCP)](https://www.linkedin.com/in/jeremy-erazo-0811081b2/details/certifications/)
-- **(ISC)² Systems Security Certified Practitioner (SSCP)**
-  - Expedición: dic. 2023
-  - Emitido por ISC2
-  - ID de la credencial: LZC7PP27UDDS
+## 💼 Experiencia Profesional
 
-![Certified AppSec Practitioner (CAP)](https://www.linkedin.com/in/jeremy-erazo-0811081b2/details/certifications/)
-- **Certified AppSec Practitioner (CAP)**
-  - Expedición: feb. 2024
-  - Emitido por The SecOps Group
-  - ID de la credencial: 8457341
+- **Head of Offensive Operations** – IST Americas *(Dic. 2024 - Actualidad)*  
+- **Offensive Security Engineer** – IST Americas *(Jun. 2024 - Dic. 2024)*  
+- **Bug Bounty Hunter** – HackerOne *(Dic. 2023 - Nov. 2024)*  
+- **Teacher Training Specialist** *(Ago. 2024 - Oct. 2024)*  
+- **IoT Security Researcher** – NetSose *(May. 2023 - Oct. 2023)*  
+- **Full-Stack Developer** – EPN-TECH *(Dic. 2022 - Feb. 2023)*  
+- **Offensive Security Engineer** – HackSyndicate *(Jun. 2019 - Dic. 2022)*  
 
-![Ethical Hacker](https://www.linkedin.com/in/jeremy-erazo-0811081b2/details/certifications/)
-- **Ethical Hacker**
-  - Expedición: ene. 2024
-  - Emitido por Cisco
+---
 
-![API Penetration Testing](https://www.linkedin.com/in/jeremy-erazo-0811081b2/details/certifications/)
-- **API Penetration Testing**
-  - Expedición: mar. 2024
-  - Emitido por APIsec University
+## 🧠 Habilidades Técnicas
 
-![API Security for Connected Cars and Fleets](https://www.linkedin.com/in/jeremy-erazo-0811081b2/details/certifications/)
-- **API Security for Connected Cars and Fleets**
-  - Expedición: mar. 2024
-  - Emitido por APIsec University
+- **Explotación Avanzada & Offensive Deep Tech**  
+  - Desarrollo de exploits (C/C++/ASM), evasión de mitigaciones (ASLR, DEP, CFG, SMEP)
+  - Técnicas de UAF, Heap Spraying, ROP Chains
 
-![Certificado de Pentesting contra la nube de AWS (CPNA)](https://www.linkedin.com/in/jeremy-erazo-0811081b2/details/certifications/)
-- **Certificado de Pentesting contra la nube de AWS (CPNA)**
-  - Expedición: dic. 2023
-  - Emitido por Spartan-Cybersecurity
-  - ID de la credencial: d2233394-5f74-452d-a2f6-ada465a16aa9
+- **Ingeniería Inversa & Análisis de Malware**  
+  - Reversing con IDA Pro, Ghidra, Radare2, Hopper  
+  - Análisis de firmware, rootkits y protocolos embebidos
 
-![Cybersecurity Operations Fundamentals Specialization](https://www.linkedin.com/in/jeremy-erazo-0811081b2/details/certifications/)
-- **Cybersecurity Operations Fundamentals Specialization**
-  - Expedición: dic. 2023
-  - Emitido por Cisco
-  - ID de la credencial: SGL3BVMJR6KV
+- **Persistencia & Post-Explotación**  
+  - Movimiento lateral, bypass de UAC/WMI, DLL hijacking  
+  - Uso avanzado de Cobalt Strike, BloodHound, SharpHound
 
-![Cybersecurity Attack and Defense Fundamentals Specialization](https://www.linkedin.com/in/jeremy-erazo-0811081b2/details/certifications/)
-- **Cybersecurity Attack and Defense Fundamentals Specialization**
-  - Expedición: nov. 2023
-  - Emitido por EC-Council
-  - ID de la credencial: X6C54LSLRJL2
+- **Seguridad Cloud & DevSecOps**  
+  - Explotación de IAM roles, serverless persistence, abuso de CI/CD pipelines
 
-![Google Cybersecurity Professional Certificate](https://www.linkedin.com/in/jeremy-erazo-0811081b2/details/certifications/)
-- **Google Cybersecurity Professional Certificate**
-  - Expedición: nov. 2023
-  - Emitido por Google
-  - ID de la credencial: NNG86JSAEEDK
+- **DFIR & Forense Digital**  
+  - Volatility, Autopsy, parsing de artefactos forenses, análisis de memoria
 
-![Splunk Search Expert Specialization](https://www.linkedin.com/in/jeremy-erazo-0811081b2/details/certifications/)
-- **Splunk Search Expert Specialization**
-  - Expedición: nov. 2023
-  - Emitido por Splunk
-  - ID de la credencial: PU6RU5QCXRX9
+- **Desarrollo de Herramientas Ofensivas**  
+  - Creación de backdoors polimórficos, parsers de logs, módulos para SIEM/XDR
 
+---
 
-### Desarrollo Web y Cloud Computing
+## 📜 Certificaciones Destacadas
 
-![AWS Cloud Solutions Architect](https://www.linkedin.com/in/jeremy-erazo-0811081b2/details/certifications/)
-- **AWS Cloud Solutions Architect**
-  - Expedición: mar. 2024
-  - Emitido por Amazon Web Services (AWS)
-  - ID de la credencial: PYYEBSFVH5XB
+### Ofensiva y Reversing
 
-![.NET FullStack Developer Specialization](https://www.linkedin.com/in/jeremy-erazo-0811081b2/details/certifications/)
-- **.NET FullStack Developer Specialization**
-  - Expedición: dic. 2023
-  - Emitido por Board Infinity
-  - ID de la credencial: 69YQKB78H2EE
+- **OffSec Exploit Developer (OSED)** – OffSec  
+- **Mobile Application Penetration Tester** – INE  
+- **Burp Suite Certified Practitioner (BSCP)** – PortSwigger  
+- **ProLabs: APTLabs, Cybernetics, Zephir, Dante, RastaLabs** – HackTheBox  
+- **Pentesting AWS Cloud (CPNA)** – Spartan Cybersecurity
 
-![Meta Back-End Developer Professional Certificate](https://www.linkedin.com/in/jeremy-erazo-0811081b2/details/certifications/)
-- **Meta Back-End Developer Professional Certificate**
-  - Expedición: nov. 2023
-  - Emitido por Meta
-  - ID de la credencial: 88A9Z6PZDZXE
+### Cloud & Infra
 
-![Meta Front-End Developer Professional Certificate](https://www.linkedin.com/in/jeremy-erazo-0811081b2/details/certifications/)
-- **Meta Front-End Developer Professional Certificate**
-  - Expedición: nov. 2023
-  - Emitido por Meta
-  - ID de la credencial: SJXCWJH3NW8S
+- **Tenable Cloud Security Specialist** – Tenable  
+- **Darktrace Threat Visualizer (1, 2, Admin)**  
+- **CrowdStrike Cloud Series (CLOUD 100-125, CTI 130)**  
+- **Splunk Search Expert** – Splunk
 
-### Cloud Computing y Data Management
+---
 
-![Oracle Cloud Data Management 2023 Certified Foundations Associate](https://www.linkedin.com/in/jeremy-erazo-0811081b2/details/certifications/)
-- **Oracle Cloud Data Management 2023 Certified Foundations Associate**
-  - Expedición: dic. 2023
-  - Emitido por Oracle
+## 🗺️ Idiomas
 
-![Oracle Cloud Infrastructure 2023 AI Certified Foundations Associate](https://www.linkedin.com/in/jeremy-erazo-0811081b2/details/certifications/)
-- **Oracle Cloud Infrastructure 2023 AI Certified Foundations Associate**
-  - Expedición: dic. 2023
-  - Emitido por Oracle
+- Español: Nativo  
+- Inglés: Intermedio  
 
-![Oracle Cloud Infrastructure 2023 Certified Foundations Associate](https://www.linkedin.com/in/jeremy-erazo-0811081b2/details/certifications/)
-- **Oracle Cloud Infrastructure 2023 Certified Foundations Associate**
-  - Expedición: dic. 2023
-  - Emitido por Oracle
+---
 
-![Google Advanced Data Analytics Professional Certificate](https://www.linkedin.com/in/jeremy-erazo-0811081b2/details/certifications/)
-- **Google Advanced Data Analytics Professional Certificate**
-  - Expedición: nov. 2023
-  - Emitido por Google
-  - ID de la credencial: D67DGSDZ8NY3
+## 📍 Información Personal
 
-### Otros
+- **Fecha de nacimiento:** 13 de septiembre, 2002  
+- **Ciudad:** Quito, Ecuador  
+- **Teléfono:** +593 96 377 9835  
+- **Correo:** mendozayt13@gmail.com  
+- **LinkedIn:** [Jeremy Erazo](https://www.linkedin.com/in/jeremy-erazo-0811081b2)
 
-![Electrodynamics Specialization](https://www.linkedin.com/in/jeremy-erazo-0811081b2/details/certifications/)
-- **Electrodynamics Specialization**
-  - Expedición: nov. 2023
-  - Emitido por 한국과학기술원(KAIST)
-  - ID de la credencial: W9KYZNEAS9Q6
+---
 
-![Intel® Telco Cloud Academy Specialization](https://www.linkedin.com/in/jeremy-erazo-0811081b2/details/certifications/)
-- **Intel® Telco Cloud Academy Specialization**
-  - Expedición: nov. 2023
-  - Emitido por Intel Corporation
-  - ID de la credencial: NW4VF8THLLWB
+## 📞 Referencias
 
+- **Marco Cevallos** – Chief Strategy Officer, IST Americas  
+  📞 +593 98 704 5695
 
-¡Gracias por visitar mi página! Si deseas ponerse en contacto conmigo, no dudes en enviarme un mensaje por mi LinkedIn!! 👌
+- **Juan Tapia** – CTO, IST Americas  
+  📞 +593 99 255 277
+
+- **Mauro Flair** – CEO, HackSyndicate  
+  📞 +593 98 350 4222
+
+- **Javier Larrea** – CEO, Oxteams  
+  📞 +593 95 877 5350
+
 
