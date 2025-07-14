@@ -13,7 +13,7 @@ La seguridad ofensiva en entornos web evoluciona constantemente. Los atacantes b
 
 ---
 
-## 📜 La carga útil
+## La carga útil
 
 Este es el payload original:
 
@@ -25,13 +25,13 @@ Este es el payload original:
 ```
 
 
-## 🧠 Fundamento técnico: ¿por qué esto funciona?
+## Fundamento técnico: ¿por qué esto funciona?
 
 Para comprender cómo una carga útil como esta puede ser ejecutada sin errores en un navegador moderno, necesitamos entender algunos aspectos clave del lenguaje JavaScript que permiten este tipo de comportamiento. Esta sección explica los fundamentos técnicos que hacen posible este tipo de evasión.
 
 ---
 
-### 🟣 1. Identificadores Unicode válidos en JavaScript
+### 1. Identificadores Unicode válidos en JavaScript
 
 ECMAScript (el estándar de JavaScript) permite que los identificadores (nombres de variables, funciones, etc.) utilicen una amplia gama de caracteres Unicode, incluidos scripts antiguos como:
 
@@ -51,7 +51,7 @@ console.log(𒀀); // Output: 123
 
 ---
 
-### 🟣 2. Coerción de tipos y generación de strings
+### 2. Coerción de tipos y generación de strings
 
 JavaScript tiene un sistema de tipos muy flexible. Se puede forzar a los valores a convertirse en strings automáticamente, y eso se explota aquí para construir palabras clave (como `eval`, `Function`, etc.) a partir de operaciones aparentemente inocuas.
 
@@ -78,7 +78,7 @@ sirven para obtener cadenas desde expresiones booleanas o de objetos.
 
 ---
 
-### 🟣 3. Acceso por índice para formar palabras
+### 3. Acceso por índice para formar palabras
 
 Después de generar las cadenas, el payload accede a ciertos caracteres mediante índices. Por ejemplo:
 
@@ -92,7 +92,7 @@ Este patrón se repite para construir las letras necesarias que forman las funci
 
 ---
 
-### 🟣 4. Creación dinámica de funciones
+### 4. Creación dinámica de funciones
 
 Al combinar todas las letras, se llega a construir cadenas como `"eval"` o `"Function"` completamente sin escribirlas directamente. Luego se usa:
 
@@ -110,7 +110,7 @@ Donde `𒁹` es la cadena `"eval"` y `𒀀` es `"alert(1)"`.
 
 ---
 
-### 🟣 5. Ejecución controlada mediante llamada dinámica
+### 5. Ejecución controlada mediante llamada dinámica
 
 Finalmente, la ejecución del código se realiza al invocar indirectamente la función construida dinámicamente, lo cual permite que el payload pase desapercibido:
 
@@ -128,7 +128,7 @@ Ambas son formas equivalentes de ejecutar código dinámico en JavaScript, y los
 
 ---
 
-## 🔐 En resumen:
+## En resumen:
 
 | Técnica                       | Propósito                            |
 |------------------------------|--------------------------------------|
