@@ -1,6 +1,8 @@
 ---
-title: "" 
+title: "Technical analysis of an obfuscated XSS payload with cuneiform characters"
 excerpt: "Technical analysis of an obfuscated XSS payload with cuneiform characters"
+header:
+  teaser: "/assets/images/Wirte.gif"
 categories:
   - Blog 
 ---
