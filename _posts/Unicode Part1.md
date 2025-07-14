@@ -1,8 +1,6 @@
 ---
 title: "Obfuscación XSS con caracteres cuneiformes"
 excerpt: "Análisis técnico avanzado de una carga útil JavaScript ofuscada mediante identificadores Unicode cuneiformes, para evadir detección y ejecutar código malicioso."
-header:
-  teaser: "/assets/images/xss-cuneiform.gif"
 categories:
   - Ciberseguridad
   - Obfuscation
