@@ -2,7 +2,7 @@
 title: "" 
 excerpt: "Technical analysis of an obfuscated XSS payload with cuneiform characters"
 categories:
-  - Vulnerabilidades 
+  - Blog 
 ---
 
 # Análisis técnico de una carga XSS ofuscada con caracteres cuneiformes
