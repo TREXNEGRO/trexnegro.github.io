@@ -1,11 +1,23 @@
 ---
-title: "Technical analysis of an obfuscated XSS payload with cuneiform characters"
-excerpt: "Technical analysis of an obfuscated XSS payload with cuneiform characters"
+title: "Obfuscación XSS con caracteres cuneiformes"
+excerpt: "Análisis técnico avanzado de una carga útil JavaScript ofuscada mediante identificadores Unicode cuneiformes, para evadir detección y ejecutar código malicioso."
 header:
-  teaser: "/assets/images/Wirte.gif"
+  teaser: "/assets/images/xss-cuneiform.gif"
 categories:
-  - Blog 
+  - Ciberseguridad
+  - Obfuscation
+  - XSS
 ---
+
+<style>
+  .teaser-img {
+    width: auto;
+    height: 200px;
+    max-width: 100%;
+  }
+</style>
+
+<img src="{{ page.header.teaser }}" alt="Teaser XSS Cuneiforme" class="teaser-img">
 
 # Análisis técnico de una carga XSS ofuscada con caracteres cuneiformes
 
