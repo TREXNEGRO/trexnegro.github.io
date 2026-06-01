@@ -244,9 +244,18 @@ Each layer is independently testable. The AMSI HW BP alone — what this post co
 
 ## Artifacts
 
-The implementation referenced here is approximately 200 lines of C across three files: VEH dispatcher (~130 lines), AMSI handler (~70 lines), ETW handler (~40 lines). Snippets in this post are the load-bearing parts.
+The full reference implementation — VEH dispatcher, AMSI handler, ETW handler, helpers, a minimal self-test, and a `mingw-w64` cross-compile script — is in the unified research repo:
 
-A clean reference port that compiles with MSVC and `mingw-w64` will follow as a separate post when I've finished stripping engagement-specific bits.
+→ **[github.com/TREXNEGRO/Research/tree/master/patchless-amsi-bypass](https://github.com/TREXNEGRO/Research/tree/master/patchless-amsi-bypass)**
+
+The shipped subset is the two validated primitives covered in this post: `BP_AMSI_HWBP` (DR0 → `amsi!AmsiScanBuffer`) and `BP_ETW_PATCH` (DR1 → `ntdll!EtwEventWrite`). It's ~500 lines of C across six files. Builds clean on `mingw-w64 gcc 13+` (`./build.sh` from a Linux host) and on MSVC 2022. The minimal self-test loads `amsi.dll`, calls `AmsiScanBuffer` on the standard AMSI test string, and asserts the result is `AMSI_RESULT_CLEAN` — i.e. the HW BP intercepted the call and rewrote the output slot.
+
+What the repo intentionally does *not* include yet:
+
+- ntdll selective refresh (`\KnownDlls`) — discussed in **Composition** below but not validated empirically in this lab against current EDR products. Will be added as a separate entry once I've benchmarked it cleanly.
+- Indirect syscalls (`Hells/Halos/Tartarus` gate family) — same. The composition section gives the shape; the reference port is not in this entry.
+
+License is MIT. PRs / issues / corrections welcome.
 
 ## References
 
