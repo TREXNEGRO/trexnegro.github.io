@@ -13,7 +13,7 @@ description: >-
   v7.1 and was AUTOSEL'd to stable. With a working PoC repo.
 ---
 
-> **TL;DR** — `cifs_readv_receive()` and `handle_read_data()` both validate the SMB2 READ response with an unguarded `data_offset + data_len > buf_len`. Both fields are `u32` taken straight off the wire. A malicious server replying with `DataOffset = 0x50` and `DataLength = 0xFFFFFFB0` wraps the sum to `0`, the bound check passes, and the kernel walks straight into reading 4 GiB off the TCP socket. Fix: `check_add_overflow()` at both call sites. Patch is in mainline as `81a8742` and was AUTOSEL'd to stable on 2026-05-20. PoC: [`TREXNEGRO/cifs-smb2-read-overflow-poc`](https://github.com/TREXNEGRO/cifs-smb2-read-overflow-poc).
+> **TL;DR** — `cifs_readv_receive()` and `handle_read_data()` both validate the SMB2 READ response with an unguarded `data_offset + data_len > buf_len`. Both fields are `u32` taken straight off the wire. A malicious server replying with `DataOffset = 0x50` and `DataLength = 0xFFFFFFB0` wraps the sum to `0`, the bound check passes, and the kernel walks straight into reading 4 GiB off the TCP socket. Fix: `check_add_overflow()` at both call sites. Patch is in mainline as `81a8742` and was AUTOSEL'd to stable on 2026-05-20. PoC: [`TREXNEGRO/research/tree/master/cifs-smb2-read-overflow`](https://github.com/TREXNEGRO/research/tree/master/cifs-smb2-read-overflow).
 {: .prompt-tip }
 
 ## Setup
@@ -315,7 +315,7 @@ A few things made this one catchable that are worth naming so future reviewers c
 
 The full reproducer — malicious server, QEMU init scripts, KASAN trace samples, side-by-side vulnerable/patched logs — is at:
 
-→ **[github.com/TREXNEGRO/cifs-smb2-read-overflow-poc](https://github.com/TREXNEGRO/cifs-smb2-read-overflow-poc)**
+→ **[github.com/TREXNEGRO/research/tree/master/cifs-smb2-read-overflow](https://github.com/TREXNEGRO/research/tree/master/cifs-smb2-read-overflow)**
 
 License is MIT. The repo includes:
 
