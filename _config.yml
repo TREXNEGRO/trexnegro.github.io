@@ -1,86 +1,173 @@
-# Jekyll Theme Settings
-markdown: kramdown
-remote_theme: "mmistakes/minimal-mistakes@4.24.0"
+# The Site Configuration
 
-# Site Settings
-title: "Blog Personal"
-subtitle: "en español 🇪🇨"
-name: "TREXNEGRO"
-description: "What cannot be fixed with money, can be fixed with a lot of money."
-locale: "en-US"
-breadcrumbs: true
-search: true
+theme: jekyll-theme-chirpy
 
-# Site Author
-author:
-  name   : "TREXNEGRO"
-  bio: "~~Hacker~~, desarrollador, poeta.. \nIncluso buena persona en\n mis tiempos libres.."
-  avatar : "/assets/images/IAM.png"
-  location: Ecuador 🇪🇨
-  links:
-    - label: "LinkedIn"
-      icon: "fab fa-fw fa-linkedin"
-      url: "https://www.linkedin.com/in/jeremy-erazo-0811081b2/"
-    - label: "GitHub"
-      icon: "fab fa-fw fa-github"
-      url: "https://github.com/TREXNEGRO"
-    - label: "YouTube"
-      icon: "fab fa-fw fa-youtube"
-      url: "https://www.youtube.com/"
+lang: en
+timezone: America/Guayaquil
 
-# Social Sharing
-og_image: "https://avatars.githubusercontent.com/u/9919?s=110&v=4"
+# ↓ jekyll-seo-tag ↓ ------------------------------
 
-# Outputting
-permalink: /:categories/:title/
-paginate: 5
-paginate_path: /page:num/
-timezone: Europe/Paris
-atom_feed:
-  hide: true
+title: SixSixSix
 
-include:
-  - _pages
+tagline: Offensive security research — kernel, EDR, web, AD.
 
-# Plugins (previously gems:)
-plugins:
-  - jekyll-paginate
-  - jekyll-sitemap
-  - jekyll-gist
-  - jemoji
-  - jekyll-include-cache
+description: >-
+  Long-form vulnerability research and writeups by SixSixSix.
+  Linux kernel exploitation, EDR bypass, Active Directory, web app security,
+  and bug-bounty methodology.
+
+url: "https://trexnegro.github.io"
+
+github:
+  username: TREXNEGRO
+
+twitter:
+  username:
+
+social:
+  name: SixSixSix
+  email:
+  fediverse_handle:
+  links: []
+
+webmaster_verifications:
+  google:
+  bing:
+  alexa:
+  yandex:
+  baidu:
+  facebook:
+
+# ↑ jekyll-seo-tag ↑ ------------------------------
+
+analytics:
+  google:
+    id:
+  goatcounter:
+    id:
+  umami:
+    id:
+    domain:
+  matomo:
+    id:
+    domain:
+  cloudflare:
+    id:
+  fathom:
+    id:
+
+pageviews:
+  provider:
+
+theme_mode: dark
+
+cdn:
+
+avatar: /assets/img/avatar.png
+
+social_preview_image: /assets/img/avatar.png
+
+toc: true
+
+comments:
+  provider:
+  disqus:
+    shortname:
+  utterances:
+    repo:
+    issue_term:
+  giscus:
+    repo:
+    repo_id:
+    category:
+    category_id:
+    mapping:
+    strict:
+    input_position:
+    lang:
+    reactions_enabled:
+
+assets:
+  self_host:
+    enabled:
+    env:
+
+pwa:
+  enabled: true
+  cache:
+    enabled: true
+    deny_paths:
+
+paginate: 10
+baseurl: ""
+
+# ------------ DO NOT modify below unless you know what you do ------------------
+
+kramdown:
+  footnote_backlink: "&#8617;&#xfe0e;"
+  syntax_highlighter: rouge
+  syntax_highlighter_opts:
+    css_class: highlight
+    span:
+      line_numbers: false
+    block:
+      line_numbers: true
+      start_line: 1
+
+collections:
+  tabs:
+    output: true
+    sort_by: order
 
 defaults:
-  # _posts
   - scope:
       path: ""
       type: posts
     values:
-      layout: single
-      author_profile: true
-      read_time: true
-      comments: true
-      classes: wide
-      header:
-        teaser: "/assets/images/BBBB.jpg"
-  # _pages
+      layout: post
+      comments: false
+      toc: true
+      permalink: /posts/:title/
   - scope:
-      path: "_pages"
-      type: pages
+      path: _drafts
     values:
-      layout: single
-      author_profile: true
-      classes: wide
-      header:
-        overlay_image: "/assets/images/BANNERINIT (2).gif"
-        overlay_filter: linear-gradient(rgba(0, 0, 0, 0.5), rgba(139, 0, 0, 0.5))
-        actions:
-          - label: "❤️ Dame amor"
-            url: "https://app.hackthebox.com/users/390124"
+      comments: false
+  - scope:
+      path: ""
+      type: tabs
+    values:
+      layout: page
+      permalink: /:title/
 
-category_archive:
-  type: liquid
-  path: /categories/
-tag_archive:
-  type: liquid
-  path: /tags/
+sass:
+  style: compressed
+
+compress_html:
+  clippings: all
+  comments: all
+  endings: all
+  profile: false
+  blanklines: false
+  ignore:
+    envs: [development]
+
+exclude:
+  - "*.gem"
+  - "*.gemspec"
+  - docs
+  - tools
+  - README.md
+  - LICENSE
+  - purgecss.js
+  - "*.config.js"
+  - "package*.json"
+  - bin/
+
+jekyll-archives:
+  enabled: [categories, tags]
+  layouts:
+    category: category
+    tag: tag
+  permalinks:
+    tag: /tags/:name/
+    category: /categories/:name/

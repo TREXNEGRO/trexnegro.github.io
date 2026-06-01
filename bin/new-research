@@ -1,0 +1,94 @@
+#!/usr/bin/env bash
+# Scaffold a new research paper post.
+# Usage: bin/new-research "softirq-context-lpe-limits"
+set -euo pipefail
+
+if [[ $# -lt 1 ]]; then
+  echo "usage: $0 <slug>"
+  echo "  slug: kebab-case-no-spaces, e.g. softirq-context-lpe-limits"
+  exit 1
+fi
+
+SLUG="$1"
+DATE="$(date +%Y-%m-%d)"
+TIME="$(date +%H:%M:%S)"
+TZ_OFFSET="$(date +%z)"
+FILE="_posts/${DATE}-${SLUG}.md"
+
+if [[ -e "$FILE" ]]; then
+  echo "error: $FILE already exists"
+  exit 1
+fi
+
+cat > "$FILE" <<EOF
+---
+title: "TITLE HERE"
+date: ${DATE} ${TIME} ${TZ_OFFSET}
+categories: [Research]
+tags: [kernel, lpe]
+math: false
+mermaid: false
+pin: false
+toc: true
+lang: en
+description: >-
+  One-paragraph summary. Used by SEO meta and the Atom feed.
+---
+
+> **TL;DR** — single-sentence executive summary of the finding.
+{: .prompt-tip }
+
+## Background
+
+Context. What was known before this research.
+
+## Research question
+
+State the question being answered. One sentence.
+
+## Hypothesis
+
+Falsifiable claim being tested.
+
+## Method
+
+How the hypothesis is tested — controlled experiment, dataset survey, empirical
+measurement, formal verification, etc. Include enough detail to replicate.
+
+\`\`\`bash
+# example tooling / command lines
+\`\`\`
+
+## Results
+
+What the data shows.
+
+| metric | before | after |
+|--------|-------:|------:|
+| x      |     0  |     1 |
+
+## Discussion
+
+Why the results matter. Limitations. Threat model.
+
+## Artifacts
+
+- PoC: \`<github url or download>\`
+- Dataset: \`<link>\`
+- Tools used: …
+
+## Disclosure
+
+- Date discovered: YYYY-MM-DD
+- Date reported: YYYY-MM-DD
+- Vendor / venue: …
+- CVE: \`CVE-YYYY-NNNN\`
+- Public disclosure: YYYY-MM-DD
+
+## References
+
+1. …
+EOF
+
+echo "[+] Created $FILE"
+echo "[+] Edit, then preview with:  bin/serve-local"

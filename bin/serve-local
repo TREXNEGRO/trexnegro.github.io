@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+# Start the Jekyll local server with live reload.
+# Default port 4000.
+set -euo pipefail
+
+# Ensure user-installed bundler is in PATH (one-time install via gem install --user-install bundler).
+export PATH="${HOME}/.local/share/gem/ruby/3.3.0/bin:${PATH}"
+
+if [[ ! -d vendor/bundle ]]; then
+  echo "[*] First run — installing gems to vendor/bundle ..."
+  bundle config set --local path vendor/bundle
+  bundle install
+fi
+
+# Live reload + drafts visible during local serve.
+exec bundle exec jekyll serve \
+  --livereload \
+  --drafts \
+  --future \
+  --port 4000 \
+  --host 127.0.0.1 \
+  --incremental
