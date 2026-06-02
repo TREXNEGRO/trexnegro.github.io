@@ -1,6 +1,6 @@
 ---
 title: "Found the same Linux iSCSI CHAP base64 overflow 25 days early — and what 'review-ready' really means"
-date: 2026-06-02 12:00:00 -0500
+date: 2026-06-01 21:00:00 -0500
 categories: [Research, Linux Kernel]
 tags: [linux-kernel, lio, iscsi, chap, base64, overflow, kasan, qemu, upstream, walkthrough, methodology]
 toc: true
