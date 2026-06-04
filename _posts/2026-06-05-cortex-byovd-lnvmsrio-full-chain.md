@@ -1,6 +1,6 @@
 ---
 title: "LnvMSRIO.sys, the 13 IOCTLs nobody audited, and an eight-round walk past Cortex XDR"
-date: 2026-06-04 12:00:00 -0500
+date: 2026-06-05 12:00:00 -0500
 categories: [Research, Vulnerable Drivers, EDR Evasion]
 tags: [byovd, lenovo, lnvmsrio, cortex-xdr, process-hollowing, indirect-syscalls, shellcode, ntloaddriver, hvci, ioctl-audit, port-io, pci-config]
 toc: true
