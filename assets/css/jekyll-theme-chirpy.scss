@@ -1,0 +1,384 @@
+---
+---
+
+@use "main";
+
+/* ===========================================================================
+ * SixSixSix — underground / Phrack-style theme overrides for Chirpy 7.5
+ *
+ * Single-file delta. Deleting this file reverts the site 100% to Chirpy defaults.
+ * No layouts, includes, posts, or _config.yml settings are touched.
+ *
+ * Author: SixSixSix
+ * Last update: 2026-06-05
+ * =========================================================================== */
+
+/* --- font: JetBrains Mono for everything (body, headings, code) --- */
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&display=swap');
+
+/* --- palette overrides for dark mode (the only mode on this site) --- */
+:root[data-mode='dark'],
+html[data-mode='dark'] {
+  /* background tones */
+  --main-bg:               #0a0a0a;
+  --mask-bg:               #0a0a0a;
+  --topbar-bg:             rgba(10, 10, 10, 0.92);
+  --topbar-text-color:     #c0c0c0;
+  --sidebar-bg:            #0a0a0a;
+  --sidebar-border-color:  #1f1f1f;
+  --sidebar-muted-color:   #6a6a6a;
+  --sidebar-active-color:  #ffb000;
+  --site-title-color:      #ffb000;
+  --site-subtitle-color:   #8a8a8a;
+  --avatar-border-color:   #ffb000;
+  --nav-cursor-color:      #ffb000;
+
+  /* text */
+  --text-color:                #c0c0c0;
+  --text-muted-color:          #7a7a7a;
+  --text-muted-highlight-color: #a0a0a0;
+  --heading-color:             #ffb000;
+  --label-color:               #c0c0c0;
+  --blockquote-text-color:     #d0d0d0;
+  --blockquote-border-color:   #ffb000;
+
+  /* links */
+  --link-color:                #5fff5f;
+  --link-underline-color:      rgba(95, 255, 95, 0.4);
+
+  /* tags */
+  --tag-border:                #6a6a6a;
+  --tag-hover:                 rgba(255, 176, 0, 0.15);
+
+  /* code blocks */
+  --highlight-bg-color:        #000;
+  --highlighter-rouge-color:   #ffb000;
+  --inline-code-bg:            rgba(255, 176, 0, 0.08);
+  --code-color:                #5fff5f;
+  --code-header-text-color:    #ffb000;
+  --code-header-muted-color:   #6a6a6a;
+  --code-header-icon-color:    #6a6a6a;
+
+  /* tables */
+  --table-border-color:        #2a2a2a;
+  --tb-odd-bg:                 #0d0d0d;
+  --tb-even-bg:                #0a0a0a;
+  --tb-border-color:           #2a2a2a;
+
+  /* search */
+  --search-border-color:       #2a2a2a;
+  --search-icon-color:         #6a6a6a;
+  --input-focus-border-color:  #ffb000;
+
+  /* prompt boxes */
+  --prompt-text-color:         #c0c0c0;
+  --prompt-tip-bg:             rgba(95, 255, 95, 0.06);
+  --prompt-tip-icon-color:     #5fff5f;
+  --prompt-info-bg:            rgba(76, 194, 255, 0.06);
+  --prompt-info-icon-color:    #4cc2ff;
+  --prompt-warning-bg:         rgba(255, 176, 0, 0.06);
+  --prompt-warning-icon-color: #ffb000;
+  --prompt-danger-bg:          rgba(255, 79, 79, 0.06);
+  --prompt-danger-icon-color:  #ff4f4f;
+}
+
+/* --- global font swap --- */
+html, body {
+  font-family: 'JetBrains Mono', 'IBM Plex Mono', 'Fira Code', Consolas, monospace !important;
+  font-feature-settings: "liga" 0;
+  font-size: 15px;
+}
+
+#core-wrapper, .post-content, .content,
+.preview-img, .card-body, .card-text {
+  font-family: inherit !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.3px !important;
+}
+
+/* --- strip rounded corners + shadows site-wide --- */
+.card, .card-wrapper, .post-preview,
+button, .btn,
+.alert, .prompt,
+.toc, #toc-popup, #toc-wrapper,
+pre, code, .highlight,
+.post-tag, .tag,
+.tab-content > .tab-pane,
+#search-input, #search-cancel,
+img:not(.avatar) {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+/* --- sidebar: amber site title + square avatar --- */
+#sidebar {
+  border-right: 1px solid var(--sidebar-border-color) !important;
+}
+
+#sidebar .site-title a {
+  font-family: 'JetBrains Mono', monospace !important;
+  text-shadow: 0 0 12px rgba(255, 176, 0, 0.45);
+}
+
+#sidebar .site-title a::before { content: "[ "; opacity: 0.5; }
+#sidebar .site-title a::after  { content: " ]"; opacity: 0.5; }
+
+#sidebar .site-subtitle {
+  font-style: normal !important;
+}
+
+#sidebar #avatar {
+  border-radius: 0 !important;
+  border: 1px solid var(--avatar-border-color) !important;
+}
+
+#sidebar .nav-item .nav-link {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 0.92rem !important;
+}
+
+#sidebar .nav-item.active .nav-link {
+  text-shadow: 0 0 6px rgba(255, 176, 0, 0.4);
+}
+
+/* --- post listing: drop preview thumbnail, ls-la-style row --- */
+#post-list .card-wrapper {
+  background: transparent !important;
+  border: none !important;
+  border-bottom: 1px dashed #2a2a2a !important;
+  padding: 0.7rem 0 !important;
+  margin: 0 !important;
+}
+
+#post-list .card-wrapper .preview-img,
+#post-list .card-wrapper:hover .preview-img {
+  display: none !important;
+}
+
+#post-list .card-wrapper .card-body {
+  padding: 0.2rem 0 !important;
+}
+
+#post-list .card-wrapper h1.card-title {
+  font-size: 1.05rem !important;
+  font-weight: 700 !important;
+  margin: 0 !important;
+  letter-spacing: -0.3px !important;
+}
+
+#post-list .card-wrapper h1.card-title a {
+  color: var(--text-color) !important;
+}
+
+#post-list .card-wrapper:hover h1.card-title a {
+  color: var(--heading-color) !important;
+  text-shadow: 0 0 8px rgba(255, 176, 0, 0.3);
+}
+
+#post-list .card-wrapper .post-meta {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 0.78rem !important;
+  color: var(--text-muted-color) !important;
+}
+
+#post-list .card-wrapper .card-text {
+  font-size: 0.88rem !important;
+  color: var(--text-muted-color) !important;
+}
+
+/* --- post title with blinking cursor --- */
+.post .post-title,
+header h1[data-toc-skip] {
+  position: relative;
+}
+
+.post .post-title::after {
+  content: '▌';
+  display: inline-block;
+  margin-left: 6px;
+  color: var(--heading-color);
+  animation: sxblink 1.1s steps(2) infinite;
+  vertical-align: -2px;
+  font-weight: 100;
+}
+
+@keyframes sxblink {
+  50% { opacity: 0; }
+}
+
+/* --- subtle CRT scanlines (very low opacity, no perf impact) --- */
+body::after {
+  content: '';
+  pointer-events: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-image: repeating-linear-gradient(
+    0deg,
+    rgba(255, 176, 0, 0.018) 0px,
+    rgba(255, 176, 0, 0.018) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  z-index: 9999;
+}
+
+/* --- code blocks: terminal vibes --- */
+pre, code, .highlighter-rouge {
+  font-family: 'JetBrains Mono', monospace !important;
+}
+
+pre {
+  border: 1px solid #1a1a1a !important;
+}
+
+div.language-shell .highlight::before,
+div.language-bash .highlight::before,
+div.language-console .highlight::before,
+div.language-sh .highlight::before {
+  content: '$ ';
+  color: var(--heading-color);
+  opacity: 0.7;
+  font-weight: bold;
+  position: relative;
+  left: 1rem;
+  top: 0.4rem;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* --- blockquote: terminal pipe --- */
+blockquote {
+  border-left: 3px solid var(--blockquote-border-color) !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  background: rgba(255, 176, 0, 0.025) !important;
+  padding: 0.6rem 1rem !important;
+}
+
+/* --- tables: hard grid, amber headers --- */
+.table-wrapper > table {
+  font-family: 'JetBrains Mono', monospace !important;
+}
+
+.table-wrapper > table th {
+  background: #121212 !important;
+  color: var(--heading-color) !important;
+  border-bottom: 2px solid var(--heading-color) !important;
+  font-weight: 700 !important;
+}
+
+/* --- tags: flat brackets, #hash prefix --- */
+.post-tag, .tag {
+  border-radius: 0 !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  text-transform: lowercase !important;
+  background: transparent !important;
+  border: 1px solid var(--tag-border) !important;
+  padding: 0.1rem 0.5rem !important;
+}
+
+.post-tag:hover, .tag:hover {
+  background: var(--tag-hover) !important;
+  border-color: var(--heading-color) !important;
+  color: var(--heading-color) !important;
+}
+
+.post-tag::before, .tag::before {
+  content: '#';
+  opacity: 0.5;
+  margin-right: 2px;
+}
+
+/* --- topbar tweaks --- */
+#topbar {
+  border-bottom: 1px solid #1a1a1a !important;
+  backdrop-filter: blur(6px);
+}
+
+#search-input {
+  font-family: 'JetBrains Mono', monospace !important;
+  border: 1px solid #2a2a2a !important;
+  background: transparent !important;
+}
+
+/* --- breadcrumb path style --- */
+#breadcrumb {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 0.82rem !important;
+  color: var(--text-muted-color) !important;
+}
+
+#breadcrumb a {
+  color: var(--text-muted-color) !important;
+}
+
+#breadcrumb a:hover {
+  color: var(--heading-color) !important;
+}
+
+/* --- footer: terminal vibe --- */
+footer {
+  font-family: 'JetBrains Mono', monospace !important;
+  color: var(--text-muted-color) !important;
+  font-size: 0.82rem !important;
+}
+
+/* --- selection --- */
+::selection {
+  background: rgba(255, 176, 0, 0.3);
+  color: #fff;
+}
+
+/* --- TOC right sidebar tweaks --- */
+#toc-wrapper, .toc {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 0.82rem !important;
+}
+
+#toc-wrapper .toc-link {
+  border-left: 1px dotted transparent !important;
+}
+
+#toc-wrapper .toc-link.is-active-link {
+  border-left-color: var(--heading-color) !important;
+  color: var(--heading-color) !important;
+}
+
+/* --- post meta line on post pages --- */
+.post-meta {
+  font-family: 'JetBrains Mono', monospace !important;
+}
+
+/* --- archive page: dense ls-la --- */
+#archives .year {
+  font-family: 'JetBrains Mono', monospace !important;
+  color: var(--heading-color) !important;
+}
+
+#archives li {
+  font-family: 'JetBrains Mono', monospace !important;
+}
+
+/* --- categories / tags index pages: flat list --- */
+#page-category li, #page-tag li {
+  border-radius: 0 !important;
+}
+
+/* --- prompt boxes (Chirpy's {: .prompt-* }): minimal --- */
+.prompt {
+  border-left: 3px solid !important;
+  border-radius: 0 !important;
+  font-family: 'JetBrains Mono', monospace !important;
+}
+
+.prompt-tip     { border-left-color: var(--prompt-tip-icon-color); }
+.prompt-info    { border-left-color: var(--prompt-info-icon-color); }
+.prompt-warning { border-left-color: var(--prompt-warning-icon-color); }
+.prompt-danger  { border-left-color: var(--prompt-danger-icon-color); }
+
+/* --- print preserve readability (defensive) --- */
+@media print {
+  body::after { display: none !important; }
+}
