@@ -59,7 +59,7 @@ analytics:
 pageviews:
   provider:
 
-theme_mode: dark
+theme_mode: light
 
 cdn:
 
