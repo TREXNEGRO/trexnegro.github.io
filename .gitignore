@@ -11,3 +11,8 @@ vendor/
 
 # macOS
 .DS_Store
+
+# Hugo build output (built by GH Actions)
+/public/
+/resources/
+.hugo_build.lock
