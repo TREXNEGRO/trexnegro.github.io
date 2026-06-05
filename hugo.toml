@@ -1,5 +1,4 @@
 baseURL = "https://trexnegro.github.io/"
-languageCode = "en-us"
 title = "SixSixSix"
 theme = "PaperMod"
 copyright = "© SixSixSix"
@@ -8,6 +7,9 @@ buildDrafts = false
 buildFuture = true
 buildExpired = false
 pagination.pagerSize = 12
+
+defaultContentLanguage = "en"
+defaultContentLanguageInSubdir = false
 
 [minify]
   disableXML = true
@@ -31,11 +33,11 @@ pagination.pagerSize = 12
     ordered = false
     startLevel = 2
 
+# -----------------------------------------------------------------------------
+# Site-wide params (shared across languages)
+# -----------------------------------------------------------------------------
 [params]
   env = "production"
-  title = "SixSixSix"
-  description = "Offensive security research — kernel exploitation, EDR evasion, Active Directory, web app security, mobile."
-  keywords = ["offensive-security", "kernel", "exploitation", "edr-bypass", "byovd", "vulnerability-research"]
   author = "SixSixSix"
   DateFormat = "2006-01-02"
   defaultTheme = "auto"
@@ -56,16 +58,6 @@ pagination.pagerSize = 12
   hideSummary = false
   showtoc = true
   tocopen = false
-
-  [params.homeInfoParams]
-    Title = "SixSixSix"
-    Content = """
-Offensive security research.
-
-Kernel exploitation, EDR evasion, Active Directory, web app security, mobile and bug-bounty methodology.
-
-Most posts are in **English**. Spanish-original posts are tagged `lang:es`.
-"""
 
   [[params.socialIcons]]
     name = "github"
@@ -100,38 +92,113 @@ Most posts are in **English**. Spanish-original posts are tagged `lang:es`.
     minMatchCharLength = 0
     keys = ["title", "permalink", "summary", "content"]
 
-[[menu.main]]
-  identifier = "posts"
-  name = "Posts"
-  url = "/posts/"
-  weight = 10
+# -----------------------------------------------------------------------------
+# Languages — English (default, at /) and Spanish (at /es/)
+# Each has its own title, description, homeInfoParams, and menu.
+# PaperMod automatically renders a globe icon in the header that switches
+# between configured languages.
+# -----------------------------------------------------------------------------
+[languages]
+  # ----- English -----
+  [languages.en]
+    languageName = "English"
+    languageCode = "en-us"
+    weight = 1
+    title = "SixSixSix"
 
-[[menu.main]]
-  identifier = "categories"
-  name = "Categories"
-  url = "/categories/"
-  weight = 20
+    [languages.en.params]
+      description = "Offensive security research — kernel exploitation, EDR evasion, Active Directory, web app security, mobile."
+      keywords = ["offensive-security", "kernel", "exploitation", "edr-bypass", "byovd", "vulnerability-research"]
 
-[[menu.main]]
-  identifier = "tags"
-  name = "Tags"
-  url = "/tags/"
-  weight = 30
+      [languages.en.params.homeInfoParams]
+        Title = "SixSixSix"
+        Content = """
+Offensive security research.
 
-[[menu.main]]
-  identifier = "archives"
-  name = "Archives"
-  url = "/archives/"
-  weight = 40
+Kernel exploitation, EDR evasion, Active Directory, web app security, mobile and bug-bounty methodology.
 
-[[menu.main]]
-  identifier = "search"
-  name = "Search"
-  url = "/search/"
-  weight = 50
+Most posts are in **English**. Spanish-original posts are tagged `lang:es`.
+"""
 
-[[menu.main]]
-  identifier = "about"
-  name = "About"
-  url = "/about/"
-  weight = 60
+    [[languages.en.menu.main]]
+      identifier = "posts"
+      name = "Posts"
+      url = "/posts/"
+      weight = 10
+    [[languages.en.menu.main]]
+      identifier = "categories"
+      name = "Categories"
+      url = "/categories/"
+      weight = 20
+    [[languages.en.menu.main]]
+      identifier = "tags"
+      name = "Tags"
+      url = "/tags/"
+      weight = 30
+    [[languages.en.menu.main]]
+      identifier = "archives"
+      name = "Archives"
+      url = "/archives/"
+      weight = 40
+    [[languages.en.menu.main]]
+      identifier = "search"
+      name = "Search"
+      url = "/search/"
+      weight = 50
+    [[languages.en.menu.main]]
+      identifier = "about"
+      name = "About"
+      url = "/about/"
+      weight = 60
+
+  # ----- Spanish -----
+  [languages.es]
+    languageName = "Español"
+    languageCode = "es-es"
+    weight = 2
+    title = "SixSixSix"
+
+    [languages.es.params]
+      description = "Investigación de seguridad ofensiva — explotación del kernel, evasión de EDR, Active Directory, seguridad de aplicaciones web, móvil."
+      keywords = ["seguridad-ofensiva", "kernel", "explotacion", "edr-bypass", "byovd"]
+
+      [languages.es.params.homeInfoParams]
+        Title = "SixSixSix"
+        Content = """
+Investigación de seguridad ofensiva.
+
+Explotación del kernel Linux, evasión EDR, Active Directory, seguridad de aplicaciones web, mobile, y metodología de bug-bounty.
+
+La mayoría de los posts están en **inglés** — usa el botón del globo arriba a la derecha para cambiar. Los posts originalmente en español tienen el tag `lang:es`.
+"""
+
+    [[languages.es.menu.main]]
+      identifier = "posts"
+      name = "Posts"
+      url = "/es/posts/"
+      weight = 10
+    [[languages.es.menu.main]]
+      identifier = "categories"
+      name = "Categorías"
+      url = "/es/categories/"
+      weight = 20
+    [[languages.es.menu.main]]
+      identifier = "tags"
+      name = "Etiquetas"
+      url = "/es/tags/"
+      weight = 30
+    [[languages.es.menu.main]]
+      identifier = "archives"
+      name = "Archivos"
+      url = "/es/archives/"
+      weight = 40
+    [[languages.es.menu.main]]
+      identifier = "search"
+      name = "Buscar"
+      url = "/es/search/"
+      weight = 50
+    [[languages.es.menu.main]]
+      identifier = "about"
+      name = "Acerca"
+      url = "/es/about/"
+      weight = 60
